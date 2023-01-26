@@ -1,15 +1,34 @@
-version: '3.5'
+version: '3.9'
 services:
   jellyfin:
-    image: jellyfin/jellyfin
+    image: jellyfin/jellyfin:latest
     container_name: jellyfin
     network_mode: 'host'
+    ports:
+      - 8096:8096
     volumes:
-      - /path/to/config:/config
-      - /path/to/cache:/cache
-      - /path/to/media:/media
-      - /path/to/media2:/media2:ro
+      - ${APP_DIR:?err}/jellyfin:/config:rw
+      - ${MEDIA_DIR:?err}:/media:rw
+      - ${APP_DIR:?err}/jellyfin:/cache:rw
+      - ${TRANSCODE_DIR?err}:/transcode:rw
+    environment:
+      TZ: ${TIMEZONE:?err}
+      PGID: ${ID:?err}
+      PUID: ${ID:?err}
+      UMASK: ${UMASK:?err}
+      # Optional - alternatice address used for autodiscovery
+      #- JELLYFIN_PublishedServerUrl=http://example.com
+    networks:
+      - liewproxy # create your own docker network
+    labels:
+      traefik.enable: true
+      traefik.http.routers.app.entryPoints: https
     restart: 'unless-stopped'
     # Optional - may be necessary for docker healthcheck to pass if running in host network mode
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
+networks:
+  liewproxy: # calls your created docker network
+    driver: bridge
+    external: true
