@@ -1,5 +1,4 @@
 http:
-
   ## EXTERNAL ROUTING EXAMPLE - Only use if you want to proxy something manually ##
   routers:
     # Homeassistant routing example - Remove if not used
@@ -25,7 +24,7 @@ http:
       ipWhiteList:
         sourceRange:
           - 127.0.0.1/32 # localhost
-          - 192.168.50.1/24 # LAN Subnet
+          - 192.168.50.0/24 # LAN Subnet
           - 172.0.0.0/8 # docker?
 
     # Authelia guard
