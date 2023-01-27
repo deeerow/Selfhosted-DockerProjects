@@ -1,78 +1,46 @@
 global:
   checkNewVersion: true
-  sendAnonymousUsage: false
-
-serversTransport:
-  insecureSkipVerify: true
 
 entryPoints:
-  # Not used in apps, but redirect everything from HTTP to HTTPS
   http:
     address: :80
-    forwardedHeaders:
-      #trustedIPs: &trustedIps
-        # Start of Clouflare public IP list for HTTP requests, remove this if you don't use it
-        #- 173.245.48.0/20
-        # End of Cloudlare public IP list
-    http:
-      redirections:
-        entryPoint:
-          to: https
-          scheme: https
 
-  # HTTPS endpoint, with domain wildcard
   https:
     address: :443
-    forwardedHeaders:
-      # Reuse list of Cloudflare Trusted IP's above for HTTPS requests
-      #trustedIPs: *trustedIps
-    http:
-      tls:
-        # Generate a wildcard domain certificate
-        certResolver: letsencrypt
-        domains:
-          - main: ${DOMAIN}  # doesnt seem like CONSTS are working therefore place with real
-            sans:
-              - '*.${DOMAIN}.com'  # doesnt seem like CONSTS are working therefore place with real
-      middlewares:
-        - securityHeaders@file
 
 providers:
   providersThrottleDuration: 2s
 
-  # File provider for connecting things that are outside of docker / defining middleware
-  file:
-    filename: /etc/traefik/fileConfig.yml
-    watch: true
-
-  # Docker provider for connecting all apps that are inside of the docker network
+  # docker provider for connecting all apps that are inside your docker network
   docker:
     watch: true
-    network: liewproxy # Add Your Docker Network Name Here
-    # Default host rule to containername.domain.example
-    defaultRule: "Host(`{{ index .Labels \"com.docker.compose.service\"}}.${DOMAIN}.COM`)"  # doesnt seem like CONSTS are working therefore place with real
+    network: proxy
+    endpoint: "tcp://socket-proxy:2375"
     swarmModeRefreshSeconds: 15s
     exposedByDefault: false
-    endpoint: "tcp://dockersocket:2375" # Uncomment if you are using docker socket proxy
 
-# Enable traefik ui
-api:
-  dashboard: true
-  insecure: true
+  file:
+    directory: /rules
+    watch: true
 
-# Log level INFO|DEBUG|ERROR
-log:
-  level: INFO
-
-# Use letsencrypt to generate ssl serficiates
+# Using LetsEncrypt to generate ssl certs
 certificatesResolvers:
-  letsencrypt:
+  mydnschallenge:
     acme:
-      email: ${USER_EMAIL}  # doesnt seem like CONSTS are working therefore place with real
-      storage: /etc/traefik/acme.json
+      email: ${USER_EMAIL}
+      storage: ./letsencrypt/acme.json
       dnsChallenge:
         provider: cloudflare
         # Used to make sure the dns challenge is propagated to the rights dns servers
         resolvers:
           - "1.1.1.1:53"
           - "1.0.0.1:53"
+        delayBeforeCheck: 10
+
+# Enabling traefik dashboard UI
+api:
+  dashboard: true
+
+# log level INFO|DEBUG|ERROR
+log:
+  level: INFO

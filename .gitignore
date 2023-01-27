@@ -1,2 +1,6 @@
-#ignore all .env files
+# ignore all .env files
 *.env
+
+# ignore letsencrpyt acme.json file
+acme.json
+
