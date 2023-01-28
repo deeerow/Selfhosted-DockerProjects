@@ -1,5 +1,6 @@
 global:
   checkNewVersion: true
+  sendAnonymousUsage: false
 
 entryPoints:
   http:
@@ -19,6 +20,7 @@ providers:
     swarmModeRefreshSeconds: 15s
     exposedByDefault: false
 
+  # all the traefik rules that will be run in the directory
   file:
     directory: /rules
     watch: true
@@ -39,7 +41,8 @@ certificatesResolvers:
 
 # Enabling traefik dashboard UI
 api:
-  dashboard: true
+  dashboard: false
+  insecure: true
 
 # log level INFO|DEBUG|ERROR
 log:
