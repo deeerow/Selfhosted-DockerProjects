@@ -1,0 +1,80 @@
+ version: '3.9'
+ services:
+   radarr:
+    container_name: radarr
+    image: lscr.io/linuxserver/radarr:latest
+    expose:
+      - 7878
+    volumes:
+      - ${APP_DIR:?err}/radarr:/etc/radarr/config
+      - ${MEDIA_DIR:?err}/movies:/media/movies
+    labels:
+      traefik.enable: true
+      traefik.http.routers.radarr.entryPoints: https
+      traefik.http.routers.radarr.middlewares: auth@file
+
+      # watchtower updater
+      com.centurylinklabs.watchtower.enable: true
+    environment:
+      TZ: ${CONTAINER_TIME_ZONE:?err}
+      PGID: ${ID:?err}
+      PUID: ${ID:?err}
+      UMASK: ${UMASK:?err}
+    networks:
+      - proxy   # change to your docker network name
+    restart: unless-stopped
+
+  sonarr:
+    container_name: sonarr
+    image: lscr.io/linuxserver/sonarr:latest
+    expose:
+      - 8989
+    volumes:
+      - ${APP_DIR:?err}/sonarr:/etc/sonarr/config
+      - ${MEDIA_DIR:?err}/tvshows:/media/tvshows
+    labels:
+      traefik.enable: true
+      traefik.http.routers.sonarr.entryPoints: https
+      traefik.http.routers.sonarr.middlewares: auth@file
+
+      # watchtower updater
+      com.centurelinklabs.watchtower.enable: true
+    environment:
+      TZ: ${CONTAINER_TIME_ZONE:?err}
+      PGID: ${ID:?err}
+      PUID: ${ID:?err}
+      UMASK: ${UMASK:?err}
+    networks:
+      - proxy   # change to your docker network name
+    restart: unless-stopped
+
+  qbittorrent:
+    container_name: qbittorrent
+    image: lscr.io/linuxserver/qbittorrent:latest
+    expose:
+      - 8080
+    volumes:
+      - ${APP_DIR:?err}/qbittorrent:/config
+      - ${MEDIA_DIR:?err}/downloads:/media/downloads
+    labels:
+      traefik.enable: true
+      traefik.http.routers.qbittorrent.entryPoints: https
+      traefik.http.routers.qbittorrent.middlewares: auth@file
+      traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
+
+      # watchtower updater
+      com.centurelinklabs.watchtower.enable: true
+    environment:
+      TZ: ${CONTAINER_TIME_ZONE:?err}
+      PGID: ${ID:?err}
+      PUID: ${ID:?err}
+      UMASK: ${UMASK:?err}
+      WEBUI_PORT: 8080
+    networks:
+      - proxy
+    restart: unless-stopped
+
+networks:
+  proxy:    # defining your docker network name
+    driver: bridge
+    external: true
