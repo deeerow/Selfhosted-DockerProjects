@@ -43,6 +43,6 @@ services:
       com.centurylinklabs.watchtower.enable: true
 
 networks:
-  proxy:   # calling your docker network name and setting it
+  proxy:   # defining your docker network name
     driver: bridge
     external: true

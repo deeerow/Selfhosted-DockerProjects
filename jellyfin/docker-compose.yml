@@ -14,15 +14,19 @@ services:
       - proxy   # change to your docker network name
     environment:
       TZ: ${CONTAINER_TIME_ZONE}
+      PGID: ${ID}
+      PUID: ${ID}
+      UMASK: ${UMASK}
     labels:
       # Traefik configs
       traefik.enable: true
-      traefik.http.routers.app.entryPoints: https
+      traefik.http.routers.jellyfin.entryPoints: https
 
       # Watchtower Update
-      - "com.centurylinklabs.watchtower.enable=true"
+      com.centurylinklabs.watchtower.enable: true
     restart: 'unless-stopped'
 
 networks:
-  proxy:    # calling your docker network name and setting it
+  proxy:    # defining your docker network name
+    driver: bridge
     external: true
