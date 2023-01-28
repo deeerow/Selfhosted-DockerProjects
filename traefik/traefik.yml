@@ -5,9 +5,25 @@ global:
 entryPoints:
   http:
     address: :80
+    http:
+      redirections:
+        entryPoint:
+          to: https
+          scheme: https
 
   https:
     address: :443
+    http:
+      tls:
+        # Generate a wildcard domain certificate
+        certResolver: letsencrypt
+        domains:
+          - main: ${DOMAIN}.com
+            sans:
+              - '*.${DOMAIN}.COM'
+      middlewares:
+        - securityHeaders@file
+
 
 providers:
   providersThrottleDuration: 2s
@@ -15,14 +31,16 @@ providers:
   # docker provider for connecting all apps that are inside your docker network
   docker:
     watch: true
-    network: proxy
+    network: proxy   # change to your docker network name
+    # Default host rule to containername.domain.example
+    defaultRule: "Host(`{{ index .Labels \"com.docker.compose.service\"}}.${DOMAIN}.COM`)"
     endpoint: "tcp://socket-proxy:2375"
     swarmModeRefreshSeconds: 15s
     exposedByDefault: false
 
   # all the traefik rules that will be run in the directory
   file:
-    directory: /rules
+    filename: /etc/traefik/fileConfig.yml
     watch: true
 
 # Using LetsEncrypt to generate ssl certs
@@ -30,7 +48,7 @@ certificatesResolvers:
   mydnschallenge:
     acme:
       email: ${USER_EMAIL}
-      storage: ./letsencrypt/acme.json
+      storage: /etc/traefik/acme.json
       dnsChallenge:
         provider: cloudflare
         # Used to make sure the dns challenge is propagated to the rights dns servers

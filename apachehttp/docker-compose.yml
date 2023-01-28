@@ -8,7 +8,7 @@ services:
     volumes:
       - ${APP_DIR}/data:/usr/local/apache2/htdocs/
     networks:
-      - proxy
+      - proxy   # change to your docker network name
     labels:
       # Enabling traefik on this
       traefik.enable: true
@@ -16,10 +16,11 @@ services:
       traefik.http.routers.webserver.entrypoints: https
       traefik.http.routers.webserver.tls: true
       traefik.http.routers.webserver.tls.certresolver: mydnschallenge
+      
       # Watchtower Update
       com.centurylinklabs.watchtower.enable: true
 
 networks:
-  proxy:
+  proxy:   # calling your docker network name and setting it
     driver: bridge
     external: true
