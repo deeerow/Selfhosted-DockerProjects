@@ -18,9 +18,9 @@ entryPoints:
         # Generate a wildcard domain certificate
         certResolver: letsencrypt
         domains:
-          - main: ${DOMAIN}.com
+          - main: ${DOMAIN:?err}.com
             sans:
-              - '*.${DOMAIN}.COM'
+              - '*.${DOMAIN:?err}.COM'
       middlewares:
         - securityHeaders@file
 
@@ -47,7 +47,7 @@ providers:
 certificatesResolvers:
   mydnschallenge:
     acme:
-      email: ${USER_EMAIL}
+      email: ${USER_EMAIL:?err}
       storage: /etc/traefik/acme.json
       dnsChallenge:
         provider: cloudflare

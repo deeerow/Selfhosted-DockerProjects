@@ -6,13 +6,13 @@ services:
     container_name: webserver
     restart: unless-stopped
     volumes:
-      - ${APP_DIR}/data:/usr/local/apache2/htdocs/
+      - ${APP_DIR:?err}/data:/usr/local/apache2/htdocs/
     networks:
       - proxy   # change to your docker network name
     labels:
       # Enabling traefik on this
       traefik.enable: true
-      traefik.http.routers.webserver.rule: Host(`www.${DOMAIN}.com`)
+      traefik.http.routers.webserver.rule: Host(`www.${DOMAIN:?err}.com`)
       traefik.http.routers.webserver.entrypoints: https
       traefik.http.routers.webserver.tls: true
       traefik.http.routers.webserver.tls.certresolver: mydnschallenge
