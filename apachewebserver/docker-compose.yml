@@ -6,7 +6,7 @@ services:
     container_name: webserver
     restart: unless-stopped
     volumes:
-      - ${APP_DIR:?err}/data:/usr/local/apache2/htdocs/
+      - ${APP_DIR:?err}/apachewebserver/data:/usr/local/apache2/htdocs/
     networks:
       - proxy   # change to your docker network name
     labels:

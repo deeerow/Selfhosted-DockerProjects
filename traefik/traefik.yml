@@ -45,7 +45,7 @@ providers:
 
 # Using LetsEncrypt to generate ssl certs
 certificatesResolvers:
-  mydnschallenge:
+  letsencrypt:
     acme:
       email: ${USER_EMAIL:?err}
       storage: /etc/traefik/acme.json
