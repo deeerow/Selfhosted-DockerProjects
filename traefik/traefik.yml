@@ -3,6 +3,7 @@ global:
   sendAnonymousUsage: false
 
 entryPoints:
+  # Not used in apps, but redirect everything from HTTP to HTTPS
   http:
     address: :80
     http:
@@ -11,6 +12,7 @@ entryPoints:
           to: https
           scheme: https
 
+  # HTTPS enpoint, with domain wildcard
   https:
     address: :443
     http:
@@ -18,9 +20,9 @@ entryPoints:
         # Generate a wildcard domain certificate
         certResolver: letsencrypt
         domains:
-          - main: ${DOMAIN:?err}.com
+          - main: deemedia.duckdns.org   # change to your domain
             sans:
-              - '*.${DOMAIN:?err}.COM'
+              - '*.deemedia.duckdns.org' # change to your domain
       middlewares:
         - securityHeaders@file
 
@@ -33,7 +35,7 @@ providers:
     watch: true
     network: proxy   # change to your docker network name
     # Default host rule to containername.domain.example
-    defaultRule: "Host(`{{ index .Labels \"com.docker.compose.service\"}}.${DOMAIN}.COM`)"
+    defaultRule: "Host(`{{ index .Labels \"com.docker.compose.service\"}}.deemedia.duckdns.org`)" # replace with your domain
     endpoint: "tcp://socket-proxy:2375"
     swarmModeRefreshSeconds: 15s
     exposedByDefault: false
@@ -47,19 +49,19 @@ providers:
 certificatesResolvers:
   letsencrypt:
     acme:
-      email: ${USER_EMAIL:?err}
+      email: dliew08@gmail.com
       storage: /etc/traefik/acme.json
       dnsChallenge:
-        provider: cloudflare
+        provider: duckdns
         # Used to make sure the dns challenge is propagated to the rights dns servers
         resolvers:
           - "1.1.1.1:53"
-          - "1.0.0.1:53"
+          - "8.8.8.8:53"
         delayBeforeCheck: 10
 
 # Enabling traefik dashboard UI
 api:
-  dashboard: false
+  dashboard: true
   insecure: true
 
 # log level INFO|DEBUG|ERROR

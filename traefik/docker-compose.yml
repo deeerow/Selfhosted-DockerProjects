@@ -6,14 +6,14 @@ services:
     ports:
       - 80:80
       - 443:443
-      #- 8080:8080  # traefik drashboard port
+      - 8080:8080  # traefik drashboard port
     volumes:
       - ${APP_DIR:?err}/traefik/:/etc/traefik/
     networks:
       - proxy   # change to your docker network name
     labels:
       traefik.enable: true   # Enable Traefik reverse proxy for the Traefik dashboard.
-      traefik.http.routers.api.rule: Host(`traefik.${DOMAIN:?err}.com`)    # Define the subdomain for the traefik dashboard.
+      traefik.http.routers.api.rule: Host(`traefik.${DOMAIN:?err}`)    # Define the subdomain for the traefik dashboard.
       traefik.http.routers.api.entryPoints: https    # Set the Traefik entry point.
       traefik.http.routers.api.service: api@internal    # Enable Traefik API.
 
@@ -21,7 +21,7 @@ services:
       com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: ${CONTAINER_TIME_ZONE:?err}
-      CF_DNS_API_TOKEN: ${CLOUDFLARE_TOKEN:?err}
+      DUCKDNS_TOKEN: ${DUCKDNS_TOKEN:?err}
     restart: unless-stopped
     depends_on:
       - socket-proxy

@@ -7,7 +7,7 @@ http:
         sourceRange:
           - 127.0.0.1/32  # localhost
           - 192.168.50.1/24  # LAN Subnet
-          - 172.16.0.0/12  # Private IP range use by docker, enable to enable services access through VPN
+          - 172.16.0.0/8  # Private IP range use by docker, enable to enable services access through VPN
 
     # Security headers
     securityHeaders:
