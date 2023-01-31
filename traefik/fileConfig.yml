@@ -6,8 +6,49 @@ http:
       ipWhiteList:
         sourceRange:
           - 127.0.0.1/32  # localhost
-          - 192.168.50.1/24  # LAN Subnet
-          - 172.16.0.0/8  # Private IP range use by docker, enable to enable services access through VPN
+          #- 192.168.1.1/24  # LAN Subnet
+          #- 172.16.0.0/8  # Private IP range use by docker, enable to enable services access through VPN
+
+    # fail2ban plugin ip white/black list bans
+    my-fail2ban:
+      plugin:
+        fail2ban:
+          blacklist:
+            ip:
+              - 192.168.0.0/24
+          rules:
+            action: ""
+            actionAbuseipdb: ""
+            backend: ""
+            banaction: ""
+            banactionAllports: ""
+            bantime: 6h
+            chain: ""
+            destemail: ""
+            enabled: "true"
+            fail2banAgent: ""
+            filter: ""
+            findtime: 10m
+            ignorecommand: ""
+            logencoding: UTF-8
+            maxretry: "4"
+            mode: ""
+            mta: ""
+            ports: 0:8000
+            protocol: ""
+            sender: ""
+            urlregexp: ""
+            usedns: ""
+          whitelist:
+            ip:
+              - ::1
+              - 127.0.0.1
+          logLevel: "INFO"
+
+    my-plugin-log4shell:
+      plugin:
+        plugin-log4shell:
+          errorCode: "200"
 
     # Security headers
     securityHeaders:

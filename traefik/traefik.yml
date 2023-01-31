@@ -20,12 +20,11 @@ entryPoints:
         # Generate a wildcard domain certificate
         certResolver: letsencrypt
         domains:
-          - main: deemedia.duckdns.org   # change to your domain
+          - main: nightowls.duckdns.org   # change to your domain
             sans:
-              - '*.deemedia.duckdns.org' # change to your domain
+              - '*.nightowls.duckdns.org' # change to your domain
       middlewares:
         - securityHeaders@file
-
 
 providers:
   providersThrottleDuration: 2s
@@ -35,7 +34,7 @@ providers:
     watch: true
     network: proxy   # change to your docker network name
     # Default host rule to containername.domain.example
-    defaultRule: "Host(`{{ index .Labels \"com.docker.compose.service\"}}.deemedia.duckdns.org`)" # replace with your domain
+    defaultRule: "Host(`{{ index .Labels \"com.docker.compose.service\"}}.nightowls.duckdns.org`)" # replace with your domain
     endpoint: "tcp://socket-proxy:2375"
     swarmModeRefreshSeconds: 15s
     exposedByDefault: false
@@ -67,3 +66,12 @@ api:
 # log level INFO|DEBUG|ERROR
 log:
   level: INFO
+
+experimental:
+  plugins:
+    fail2ban:
+      moduleName: "github.com/tomMoulard/fail2ban"
+      version: "v0.6.6"
+    plugin-log4shell:
+      moduleName: "github.com/traefik/plugin-log4shell"
+      version: "v0.1.2"
