@@ -1,0 +1,56 @@
+version: '3.9'
+services:
+  auth:
+    container_name: authelia
+    image: authelia/authelia:latest
+    expose:
+      - 9091
+    volumes:
+      - ${APP_DIR:?err}/authelia:/etc/authelia/config
+    labels:
+      traefik.enable: true
+      traefik.http.routers.authelia.entryPoints: https
+
+      # Watchtower Update
+      com.centurylinklabs.watchtower.enable: true
+    networks:
+      - proxy
+      - secure
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - mariadb
+
+  redis:
+    container_name: redis
+    image: bitnami/redis:latest
+    expose:
+      - 6379
+    volumes:
+      - ${APP_DIR:?err}/redis:/bitnami/
+    environment:
+      REDIS_PASSWORD: "${REDIS_PASS:?err}"
+    networks:
+      - secure
+    restart: unless-stopped
+
+  mariadb:
+    container_name: mariadb
+    image: linuxserver/mariadb:latest
+    expose:
+      - 3306
+    volumes:
+      - ${APP_DIR:?err}/mariadb:/etc/mariadb/config
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASS:?err}"
+    networks:
+      - secure
+    restart: unless-stopped
+
+networks:
+  proxy:
+    driver: bridge
+    external: true
+  secure:
+    driver: bridge
+    external: true

@@ -11,6 +11,7 @@ services:
       - ${APP_DIR:?err}/traefik/:/etc/traefik/
     networks:
       - proxy   # change to your docker network name
+      - secure
     labels:
       traefik.enable: true   # Enable Traefik reverse proxy for the Traefik dashboard.
       traefik.http.routers.api.rule: Host(`traefik.${DOMAIN:?err}`)    # Define the subdomain for the traefik dashboard.
@@ -32,10 +33,11 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
-      - proxy   # change to your docker network name
+      - secure   # change to your docker network name
     environment:
       TZ: ${CONTAINER_TIME_ZONE:?err}
       CONTAINERS: 1
+      POST: 0
     privileged: true
     restart: unless-stopped
     labels:
@@ -44,5 +46,9 @@ services:
 
 networks:
   proxy:   # defining your docker network name
+    driver: bridge
+    external: true
+
+  secure:
     driver: bridge
     external: true
