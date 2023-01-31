@@ -6,43 +6,23 @@ services:
     ports:
       - 80:80
       - 443:443
-      #- 8080:8080  # traefik drashboard port
+      - 8080:8080  # traefik drashboard port
     volumes:
-      - ${APP_DIR}/traefik.yml:/traefik.yml:ro  # traefik api config file
-      - ${APP_DIR}/rules:/rules:ro  # traefik optional files
-      - ${APP_DIR}/letsencrypt:/letsencrypt # LetsEncrypt ACME Config
+      - ${APP_DIR:?err}/traefik/:/etc/traefik/
     networks:
-      - proxy
+      - proxy   # change to your docker network name
+      - secure
     labels:
       traefik.enable: true   # Enable Traefik reverse proxy for the Traefik dashboard.
-
-      # global redirect to https
-      traefik.http.routers.http-catchall.rule: hostregexp(`{host:.+}`)
-      traefik.http.routers.http-catchall.entrypoints: http
-      traefik.http.routers.http-catchall.middlewares: redirect-to-https
-
-      # middleware redirect
-      traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: https
-      traefik.http.middlewares.redirect-to-https.redirectscheme.permanent: true
-
-      # redirect root to www
-      traefik.http.routers.root.rule: host(`${DOMAIN}.com`)
-      traefik.http.routers.root.entrypoints: https
-      traefik.http.routers.root.middlewares: redirect-root-to-www
-      traefik.http.routers.root.tls: true
-
-      # middleware redirect root to www
-      traefik.http.middlewares.redirect-root-to-www.redirectregex.regex: ^https://${DOMAIN}\\.com/(.*)
-      traefik.http.middlewares.redirect-root-to-www.redirectregex.replacement: https://www.${DOMAIN}.com/$${1}
-
-      # IP filtering
-      traefik.http.routers.service-router-name.middlewares: whitelist@file
+      traefik.http.routers.api.rule: Host(`traefik.${DOMAIN:?err}`)    # Define the subdomain for the traefik dashboard.
+      traefik.http.routers.api.entryPoints: https    # Set the Traefik entry point.
+      traefik.http.routers.api.service: api@internal    # Enable Traefik API.
 
       # Watchtower Update
       com.centurylinklabs.watchtower.enable: true
     environment:
-      TZ: ${CONTAINER_TIME_ZONE}
-      CF_DNS_API_TOKEN: ${CLOUDFLARE_TOKEN}
+      TZ: ${CONTAINER_TIME_ZONE:?err}
+      DUCKDNS_TOKEN: ${DUCKDNS_TOKEN:?err}
     restart: unless-stopped
     depends_on:
       - socket-proxy
@@ -53,9 +33,11 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
-      - proxy
+      - secure   # change to your docker network name
     environment:
+      TZ: ${CONTAINER_TIME_ZONE:?err}
       CONTAINERS: 1
+      POST: 0
     privileged: true
     restart: unless-stopped
     labels:
@@ -63,6 +45,10 @@ services:
       com.centurylinklabs.watchtower.enable: true
 
 networks:
-  proxy:
+  proxy:   # defining your docker network name
+    driver: bridge
+    external: true
+
+  secure:
     driver: bridge
     external: true

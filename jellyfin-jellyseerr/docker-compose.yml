@@ -1,0 +1,54 @@
+version: '3.9'
+services:
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    ports:
+      - 8096:8096
+    volumes:
+      - ${APP_DIR:?err}/jellyfin:/etc/jellyfin/config
+      - ${MEDIA_DIR:?err}:/media
+      - ${APP_DIR:?err}/jellyfin:/cache
+      - ${TRANSCODE_DIR:?err}:/transcode
+    networks:
+      - proxy   # change to your docker network name
+    environment:
+      TZ: ${CONTAINER_TIME_ZONE:?err}
+      PGID: ${ID:?err}
+      PUID: ${ID:?err}
+      UMASK: ${UMASK:?err}
+    labels:
+      traefik.enable: true
+      traefik.http.routers.jellyfin.entryPoints: https
+      traefik.http.routers.jellyfin.middlewares: local-ipwhitelist@file
+
+      # Watchtower Updater
+      com.centurylinklabs.watchtower.enable: true
+    restart: unless-stopped
+
+  jellyseerr:
+    container_name: jellyseerr
+    image: fallenbagel/jellyseerr:latest
+    ports:
+      - 5055:5055
+    volumes:
+      - ${APP_DIR:?err}/jellyseerr:/etc/jellyseerr/config
+    labels:
+      traefik.enable: true
+      traefik.http.routers.request.entryPoints: https
+      traefik.http.routers.jellyseerr.middlewares: local-ipwhitelist@file
+
+      # watchtower updater
+      com.centurelinklabs.watchtower.enable: true
+    environment:
+      TZ: ${CONTAINER_TIME_ZONE:?err}
+      PGID: ${ID:?err}
+      PUID: ${ID:?err}
+    networks:
+      - proxy   # change to your docker network name
+    restart: unless-stopped
+
+networks:
+  proxy:    # defining your docker network name
+    driver: bridge
+    external: true
