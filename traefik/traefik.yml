@@ -48,7 +48,7 @@ providers:
 certificatesResolvers:
   letsencrypt:
     acme:
-      email: dliew08@gmail.com
+      email: dee.nightowls@gmail.com
       storage: /etc/traefik/acme.json
       dnsChallenge:
         provider: duckdns
@@ -67,6 +67,7 @@ api:
 log:
   level: INFO
 
+# installed plugins provided by traefik
 experimental:
   plugins:
     fail2ban:

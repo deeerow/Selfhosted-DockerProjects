@@ -1,13 +1,16 @@
 http:
   ## MIDDLEWARES ##
   middlewares:
-    # Only Allow Local networks
-    local-ipwhitelist:
-      ipWhiteList:
-        sourceRange:
-          - 127.0.0.1/32  # localhost
-          #- 192.168.1.1/24  # LAN Subnet
-          #- 172.16.0.0/8  # Private IP range use by docker, enable to enable services access through VPN
+    # Authelia guard
+    auth:
+      forwardauth:
+        address: http://authelia:9091/api/verify?rd=https://authelia.nightowls.duckdns.org/  # replace auth with your authelia container name
+        trustForwardHeader: true
+        authResponseHeaders:
+          - Remote-User
+          - Remote-Groups
+          - Remote-Name
+          - Remote-Email
 
     # fail2ban plugin ip white/black list bans
     my-fail2ban:
@@ -45,6 +48,7 @@ http:
               - 127.0.0.1
           logLevel: "INFO"
 
+    # log4j plugin define
     my-plugin-log4shell:
       plugin:
         plugin-log4shell:

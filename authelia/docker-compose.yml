@@ -10,6 +10,7 @@ services:
     labels:
       traefik.enable: true
       traefik.http.routers.authelia.entryPoints: https
+      traefik.http.routers.authelia.rule: Host(`auth.${DOMAIN:?err}`)
 
       # Watchtower Update
       com.centurylinklabs.watchtower.enable: true
@@ -27,9 +28,12 @@ services:
     expose:
       - 6379
     volumes:
-      - ${APP_DIR:?err}/redis:/bitnami/
+      - ${APP_DIR:?err}/authelia/redis:/redis/bitnami/
+    labels:
+      # Watchtower Update
+      com.centurylinklabs.watchtower.enable: true
     environment:
-      REDIS_PASSWORD: "${REDIS_PASS:?err}"
+      REDIS_PASSWORD: ${REDIS_PASS:?err}
     networks:
       - secure
     restart: unless-stopped
@@ -40,9 +44,13 @@ services:
     expose:
       - 3306
     volumes:
-      - ${APP_DIR:?err}/mariadb:/etc/mariadb/config
+      - ${APP_DIR:?err}/authelia/mariadb:/etc/mariadb/config
+    labels:
+      # Watchtower Update
+      com.centurylinklabs.watchtower.enable: true
     environment:
-      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASS:?err}"
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASS:?err}
     networks:
       - secure
     restart: unless-stopped

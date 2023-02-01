@@ -1,0 +1,22 @@
+version: '3.9'
+services:
+  adminer:
+    container_name: adminer
+    image: adminer
+    ports:
+      - 8282:8282
+    labels:
+      traefik.enable: true
+      traefik.http.routers.adminer.entryPoints: https
+      traefik.http.routers.adminer.middlewares: auth@file
+
+      # Watchtower Update
+      com.centurylinklabs.watchtower.enable: true
+    networks:
+      - proxy   # use your created docker network
+    restart: unless-stopped
+
+networks:
+  proxy:   # defining your docker network
+    driver: bridge
+    external: true
