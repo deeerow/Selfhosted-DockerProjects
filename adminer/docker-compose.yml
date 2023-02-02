@@ -13,10 +13,10 @@ services:
       # Watchtower Update
       com.centurylinklabs.watchtower.enable: true
     networks:
-      - proxy   # use your created docker network
+      - secure   # use your created docker network
     restart: unless-stopped
 
 networks:
-  proxy:   # defining your docker network
+  secure:   # defining your docker network
     driver: bridge
     external: true

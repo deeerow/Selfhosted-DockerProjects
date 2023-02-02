@@ -6,7 +6,7 @@ services:
     expose:
       - 9091
     volumes:
-      - ${APP_DIR:?err}/authelia:/etc/authelia/config
+      - ${APP_DIR:?err}/authelia:/config
     labels:
       traefik.enable: true
       traefik.http.routers.authelia.entryPoints: https
@@ -14,6 +14,8 @@ services:
 
       # Watchtower Update
       com.centurylinklabs.watchtower.enable: true
+    environment:
+      TZ: ${CONTAINER_TIME_ZONE}
     networks:
       - proxy
       - secure
@@ -40,16 +42,12 @@ services:
 
   mariadb:
     container_name: mariadb
-    image: linuxserver/mariadb:latest
+    image: mariadb
     expose:
       - 3306
     volumes:
-      - ${APP_DIR:?err}/authelia/mariadb:/etc/mariadb/config
-    labels:
-      # Watchtower Update
-      com.centurylinklabs.watchtower.enable: true
+      - ${APP_DIR:?err}/authelia/mariadb:/config
     environment:
-      MYSQL_ROOT_USER: root
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASS:?err}
     networks:
       - secure
