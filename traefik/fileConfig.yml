@@ -4,7 +4,18 @@ http:
     # Authelia guard
     auth:
       forwardauth:
-        address: http://authelia:9091/api/verify?rd=https://authelia.nightowls.duckdns.org/  # replace auth with your authelia container name
+        address: http://auth:9091/api/verify?rd=https://auth.nightowls.duckdns.org/  # replace auth with your authelia container name
+        trustForwardHeader: true
+        authResponseHeaders:
+          - Remote-User
+          - Remote-Groups
+          - Remote-Name
+          - Remote-Email
+
+    # Authelia basic auth guard
+    auth-basic:
+      forwardauth:
+        address: http://auth:9091/api/verify?auth=basic # replace auth with your authelia container name
         trustForwardHeader: true
         authResponseHeaders:
           - Remote-User

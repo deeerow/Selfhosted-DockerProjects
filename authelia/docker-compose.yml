@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   auth:
-    container_name: authelia
+    container_name: auth
     image: authelia/authelia:latest
     expose:
       - 9091
@@ -9,8 +9,7 @@ services:
       - ${APP_DIR:?err}/authelia:/config
     labels:
       traefik.enable: true
-      traefik.http.routers.authelia.entryPoints: https
-      traefik.http.routers.authelia.rule: Host(`auth.${DOMAIN:?err}`)
+      traefik.http.routers.auth.entryPoints: https
 
       # Watchtower Update
       com.centurylinklabs.watchtower.enable: true
