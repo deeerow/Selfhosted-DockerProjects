@@ -34,6 +34,7 @@ services:
       # Watchtower Update
       com.centurylinklabs.watchtower.enable: true
     environment:
+      TZ: ${CONTAINER_TIME_ZONE}
       REDIS_PASSWORD: ${REDIS_PASS:?err}
     networks:
       - secure
@@ -47,8 +48,55 @@ services:
     volumes:
       - ${APP_DIR:?err}/authelia/mariadb:/config
     environment:
+      TZ: ${CONTAINER_TIME_ZONE}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASS:?err}
     networks:
+      - secure
+    restart: unless-stopped
+
+  openldap:
+    container_name: openldap
+    image: osixia/openldap:latest
+    expose:
+      - 389
+      - 636
+    volumes:
+      - ${APP_DIR:?err}/authelia/openldap/certificates:/container/service/slapd/assets/certs
+      - ${APP_DIR:?err}/authelia/openldap/slapd/database:/var/lib/ldap
+      - ${APP_DIR:?err}/authelia/openldap/slapd/config:/etc/ldap/slapd.d
+    environment:
+      TZ: ${CONTAINER_TIME_ZONE}
+      LDAP_ORGANISATION: "${LDAP_ORGANISATION:?err}"
+      LDAP_DOMAIN: "${LDAP_DOMAIN:?err}"
+      LDAP_ADMIN_USERNAME: "${LDAP_ADMIN_USERNAME:?err}"
+      LDAP_ADMIN_PASSWORD: "${LDAP_ADMIN_PASSWORD:?err}"
+      LDAP_CONFIG_PASSWORD: "${LDAP_CONFIG_PASSWORD:?err}"
+      LDAP_BASE_DN: "${LDAP_BASE_DN:?err}"
+      LDAP_TLS_CRT_FILENAME: "${LDAP_TLS_CRT_FILENAME:?err}"
+      LDAP_TLS_KEY_FILENAME: "${LDAP_TLS_KEY_FILENAME:?err}"
+      LDAP_TLS_CA_CRT_FILENAME: "${LDAP_TLS_CA_CRT_FILENAME:?err}"
+    networks:
+      - secure
+    restart: unless-stopped
+
+  ldapadmin:
+    container_name: ldapadmin
+    image: osixia/phpldapadmin:latest
+    expose:
+      - 80
+    labels:
+      traefik.enable: true
+      traefik.http.routers.ldapadmin.entryPoints: https
+      traefik.http.routers.ldapadmin.middlewares: auth@file
+    environment:
+      - PHPLDAPADMIN_LDAP_HOSTS=openldap
+      - PHPLDAPADMIN_HTTPS=false
+    volumes:
+     - ${APP_DIR:?err}/authelia/openldap/admin:/var/www/phpldapadmin # used to make edits to the config file
+    depends_on:
+      - openldap
+    networks:
+      - proxy
       - secure
     restart: unless-stopped
 
