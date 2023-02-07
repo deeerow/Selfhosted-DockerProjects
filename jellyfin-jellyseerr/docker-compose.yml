@@ -20,10 +20,9 @@ services:
     labels:
       traefik.enable: true
       traefik.http.routers.jellyfin.entryPoints: https
-      traefik.http.routers.jellyfin.middlewares: local-ipwhitelist@file
 
       # Watchtower Updater
-      com.centurylinklabs.watchtower.enable: true
+      #com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
 
   jellyseerr:
@@ -32,14 +31,13 @@ services:
     ports:
       - 5055:5055
     volumes:
-      - ${APP_DIR:?err}/jellyseerr:/etc/jellyseerr/config
+      - ${APP_DIR:?err}/jellyseerr:/app/config
     labels:
       traefik.enable: true
-      traefik.http.routers.request.entryPoints: https
-      traefik.http.routers.jellyseerr.middlewares: local-ipwhitelist@file
+      traefik.http.routers.jellyseerr.entryPoints: https
 
       # watchtower updater
-      com.centurelinklabs.watchtower.enable: true
+      #com.centurelinklabs.watchtower.enable: true
     environment:
       TZ: ${CONTAINER_TIME_ZONE:?err}
       PGID: ${ID:?err}

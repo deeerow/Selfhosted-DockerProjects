@@ -12,7 +12,7 @@ services:
       traefik.http.routers.auth.entryPoints: https
 
       # Watchtower Update
-      com.centurylinklabs.watchtower.enable: true
+      #com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: ${CONTAINER_TIME_ZONE}
     networks:
@@ -75,6 +75,10 @@ services:
       LDAP_TLS_CRT_FILENAME: "${LDAP_TLS_CRT_FILENAME:?err}"
       LDAP_TLS_KEY_FILENAME: "${LDAP_TLS_KEY_FILENAME:?err}"
       LDAP_TLS_CA_CRT_FILENAME: "${LDAP_TLS_CA_CRT_FILENAME:?err}"
+      LDAP_RFC2307BIS_SCHEMA: 'true'
+
+      # Watchtower Update
+      #com.centurylinklabs.watchtower.enable: true  
     networks:
       - secure
     restart: unless-stopped
@@ -89,8 +93,12 @@ services:
       traefik.http.routers.ldapadmin.entryPoints: https
       traefik.http.routers.ldapadmin.middlewares: auth@file
     environment:
-      - PHPLDAPADMIN_LDAP_HOSTS=openldap
-      - PHPLDAPADMIN_HTTPS=false
+      TZ: ${CONTAINER_TIME_ZONE}
+      PHPLDAPADMIN_LDAP_HOSTS: openldap
+      PHPLDAPADMIN_HTTPS: false
+
+      # Watchtower Update
+      #com.centurylinklabs.watchtower.enable: true
     volumes:
      - ${APP_DIR:?err}/authelia/openldap/admin:/var/www/phpldapadmin # used to make edits to the config file
     depends_on:
