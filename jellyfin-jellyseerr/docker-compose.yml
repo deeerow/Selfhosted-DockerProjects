@@ -7,11 +7,11 @@ services:
       - 8096:8096
     volumes:
       - ${APP_DIR:?err}/jellyfin:/etc/jellyfin/config
-      - ${MEDIA_DIR:?err}:/media
+      - ${MEDIA_DIR:?err}:/data:ro
       - ${APP_DIR:?err}/jellyfin:/cache
       - ${TRANSCODE_DIR:?err}:/transcode
     networks:
-      - proxy   # change to your docker network name
+      - proxy
     environment:
       TZ: ${CONTAINER_TIME_ZONE:?err}
       PGID: ${ID:?err}
@@ -21,7 +21,6 @@ services:
       traefik.enable: true
       traefik.http.routers.jellyfin.entryPoints: https
 
-      # Watchtower Updater
       #com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
 
@@ -36,17 +35,16 @@ services:
       traefik.enable: true
       traefik.http.routers.jellyseerr.entryPoints: https
 
-      # watchtower updater
       #com.centurelinklabs.watchtower.enable: true
     environment:
       TZ: ${CONTAINER_TIME_ZONE:?err}
       PGID: ${ID:?err}
       PUID: ${ID:?err}
     networks:
-      - proxy   # change to your docker network name
+      - proxy
     restart: unless-stopped
 
 networks:
-  proxy:    # defining your docker network name
+  proxy:
     driver: bridge
     external: true

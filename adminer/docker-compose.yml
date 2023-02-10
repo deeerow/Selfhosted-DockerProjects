@@ -10,13 +10,12 @@ services:
       traefik.http.routers.adminer.entryPoints: https
       traefik.http.routers.adminer.middlewares: auth@file
 
-      # Watchtower Update
       com.centurylinklabs.watchtower.enable: true
     networks:
-      - secure   # use your created docker network
+      - secure
     restart: unless-stopped
 
 networks:
-  secure:   # defining your docker network
+  secure:
     driver: bridge
     external: true

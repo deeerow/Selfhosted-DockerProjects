@@ -11,15 +11,13 @@ services:
       - ${APP_DIR:?err}/traefik/:/etc/traefik/
     networks:
       - proxy   # change to your docker network name
-      - secure
+      - secure  # have a second one for sensitive containers
     labels:
-      traefik.enable: true   # Enable Traefik reverse proxy for the Traefik dashboard.
-      #traefik.http.routers.api.rule: Host(`traefik.${DOMAIN:?err}`)    # Define the subdomain for the traefik dashboard.
+      traefik.enable: true   # Enable Traefik reverse proxy
       traefik.http.routers.api.entryPoints: https    # Set the Traefik entry point.
       traefik.http.routers.api.service: api@internal    # Enable Traefik API.
       traefik.http.routers.api.middlewares: auth@file  # enabling authelia login to traefik
 
-      # Watchtower Update
       com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: ${CONTAINER_TIME_ZONE:?err}
@@ -34,7 +32,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
-      - secure   # change to your docker network name
+      - secure
     environment:
       TZ: ${CONTAINER_TIME_ZONE:?err}
       CONTAINERS: 1
@@ -42,11 +40,10 @@ services:
     privileged: true
     restart: unless-stopped
     labels:
-      # Watchtower update
       com.centurylinklabs.watchtower.enable: true
 
 networks:
-  proxy:   # defining your docker network name
+  proxy:
     driver: bridge
     external: true
 
