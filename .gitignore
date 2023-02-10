@@ -4,3 +4,8 @@
 # ignore letsencrpyt acme.json file
 acme.json
 
+#ignoring authelia secrets directory
+/authelia/secrets
+
+#ignoring openldap directory
+/authelia/openldap/
