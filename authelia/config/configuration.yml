@@ -1,7 +1,7 @@
 ###############################################################################
 #                           Authelia Configuration                            #
 ###############################################################################
-#  All secrets and password are specficied in docker volumes
+        #  All secrets and password are specficied in docker volumes  #
 theme: dark
 default_redirection_url: https://auth.nightowls.duckdns.org/
 
@@ -109,9 +109,9 @@ storage:
 notifier:
   disable_startup_check: false
   smtp:
-    username: authelia.nightowls@gmail.comls -la
+    username: authelia.nightowls@gmail.com
     host: smtp.gmail.com
     port: 587
     sender: authelia.nightowls@gmail.com
-    subject: "[Authelia] You requested from Nightowls"
+    subject: "[Authelia] Nightowls Action Request"
     startup_check_address: test@authelia.com
