@@ -1,0 +1,43 @@
+services:
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      TZ: ${CONTAINER_TIME_ZONE:?err}
+      WATCHTOWER_LABEL_ENABLE: true
+      WATCHTOWER_SCHEDULE: 0 0 4 * * MON
+      WATCHTOWER_CLEANUP: true
+      WATCHTOWER_ROLLING_RESTART: true
+      WATCHTOWER_LOG_LEVEL: info
+      WATCHTOWER_NOTIFICATION_REPORT: "true"
+      WATCHTOWER_NOTIFICATION_URL: discord://${DISCORD_WEBHOOK_CHANNEL}@${DISCORD_WEBHOOK_ID}
+      WATCHTOWER_NOTIFICATION_TEMPLATE: |
+        {{- if .Report -}}
+          {{- with .Report -}}
+        {{len .Scanned}} Scanned, {{len .Updated}} Updated, {{len .Failed}} Failed
+              {{- range .Updated}}
+        - {{.Name}} ({{.ImageName}}): {{.CurrentImageID.ShortID}} updated to {{.LatestImageID.ShortID}}
+              {{- end -}}
+              {{- range .Fresh}}
+        - {{.Name}} ({{.ImageName}}): {{.State}}
+            {{- end -}}
+            {{- range .Skipped}}
+        - {{.Name}} ({{.ImageName}}): {{.State}}: {{.Error}}
+            {{- end -}}
+            {{- range .Failed}}
+        - {{.Name}} ({{.ImageName}}): {{.State}}: {{.Error}}
+            {{- end -}}
+          {{- end -}}
+        {{- else -}}
+          {{range .Entries -}}{{.Message}}{{"\n"}}{{- end -}}
+        {{- end -}}
+    networks:
+      - secure
+    restart: unless-stopped
+
+networks:
+  secure:
+    driver: bridge
+    external: true
