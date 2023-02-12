@@ -1,12 +1,12 @@
 version: '3.9'
 services:
   jellyfin:
-    image: jellyfin/jellyfin
+    image: jellyfin/jellyfin:latest
     container_name: jellyfin
     ports:
       - 8096:8096
     volumes:
-      - ${APP_DIR:?err}/jellyfin:/etc/jellyfin/config
+      - ${APP_DIR:?err}/jellyfin:/config
       - ${MEDIA_DIR:?err}:/data:ro
       - ${APP_DIR:?err}/jellyfin:/cache
       - ${TRANSCODE_DIR:?err}:/transcode
@@ -21,7 +21,7 @@ services:
       traefik.enable: true
       traefik.http.routers.jellyfin.entryPoints: https
 
-      #com.centurylinklabs.watchtower.enable: true
+      com.centurylinklabs.watchtower.enable: true
     restart: unless-stopped
 
   jellyseerr:
@@ -35,7 +35,7 @@ services:
       traefik.enable: true
       traefik.http.routers.jellyseerr.entryPoints: https
 
-      #com.centurelinklabs.watchtower.enable: true
+      com.centurelinklabs.watchtower.enable: true
     environment:
       TZ: ${CONTAINER_TIME_ZONE:?err}
       PGID: ${ID:?err}

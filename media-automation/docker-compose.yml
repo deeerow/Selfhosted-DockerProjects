@@ -6,14 +6,14 @@ services:
     expose:
       - 7878
     volumes:
-      - ${APP_DIR:?err}/radarr:/etc/radarr/config
-      - ${MEDIA_DIR:?err}/movies:/data
+      - ${APP_DIR:?err}/radarr:/config
+      - ${MEDIA_DIR:?err}:/data
     labels:
       traefik.enable: true
       traefik.http.routers.radarr.entryPoints: https
       traefik.http.routers.radarr.middlewares: auth@file
 
-      #com.centurylinklabs.watchtower.enable: true
+      com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: ${CONTAINER_TIME_ZONE:?err}
       PGID: ${ID:?err}
@@ -29,14 +29,14 @@ services:
     expose:
       - 8989
     volumes:
-      - ${APP_DIR:?err}/sonarr:/etc/sonarr/config
-      - ${MEDIA_DIR:?err}/tvshows:/data
+      - ${APP_DIR:?err}/sonarr:/config
+      - ${MEDIA_DIR:?err}:/data
     labels:
       traefik.enable: true
       traefik.http.routers.sonarr.entryPoints: https
       traefik.http.routers.sonarr.middlewares: auth@file
 
-      #com.centurelinklabs.watchtower.enable: true
+      com.centurelinklabs.watchtower.enable: true
     environment:
       TZ: ${CONTAINER_TIME_ZONE:?err}
       PGID: ${ID:?err}
@@ -53,14 +53,14 @@ services:
       - 8080
     volumes:
       - ${APP_DIR:?err}/qbittorrent:/config
-      - ${MEDIA_DIR:?err}/downloads:/data
+      - ${MEDIA_DIR:?err}/torrents:/data/torrents:rw
     labels:
       traefik.enable: true
       traefik.http.routers.qbittorrent.entryPoints: https
       traefik.http.routers.qbittorrent.middlewares: auth@file
-      traefik.http.services.qbittorrent.loadbalancer.server.port: 808
+      traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
 
-      #com.centurelinklabs.watchtower.enable: true
+      com.centurelinklabs.watchtower.enable: true
     environment:
       TZ: ${CONTAINER_TIME_ZONE:?err}
       PGID: ${ID:?err}
@@ -69,6 +69,27 @@ services:
       WEBUI_PORT: 8080
     networks:
       - proxy
+    restart: unless-stopped
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    ports:
+      - 9696:9696
+    volumes:
+      - ${APP_DIR:?err}/prowlarr:/config
+    labels:
+      traefik.enable: true
+      traefik.http.routers.jackett.entryPoints: https
+      traefik.http.routers.jackett.middlewares: auth@file
+
+      com.centurelinklabs.watchtower.enable: true
+    environment:
+      TZ: ${CONTAINER_TIME_ZONE:?err}
+      PGID: ${ID:?err}
+      PUID: ${ID:?err}
+    networks:
+      - proxy 
     restart: unless-stopped
 
 networks:
