@@ -6,10 +6,9 @@ services:
     ports:
       - 8096:8096
     volumes:
-      - ${APP_DIR:?err}/jellyfin:/config
+      - ${APP_DIR:?err}/jellyfin:/config:rw
       - ${MEDIA_DIR:?err}:/data:ro
-      - ${APP_DIR:?err}/jellyfin:/cache
-      - ${TRANSCODE_DIR:?err}:/transcode
+      - ${TRANSCODE_DIR:?err}:/transcode:rw
     networks:
       - proxy
     environment:
