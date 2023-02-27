@@ -9,6 +9,7 @@ services:
       - 8080:8080  # traefik drashboard port
     volumes:
       - ${APP_DIR:?err}/traefik/:/etc/traefik/
+      - ${APP_DIR:?err}/traefik/secrets:/secrets
     networks:
       - proxy   # change to your docker network name
       - secure  # have a second one for sensitive containers
@@ -21,7 +22,8 @@ services:
       com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: ${CONTAINER_TIME_ZONE:?err}
-      DUCKDNS_TOKEN: ${DUCKDNS_TOKEN:?err}
+      PORKBUN_API_KEY_FILE: /secrets/PORKBUN_API_KEY
+      PORKBUN_SECRET_API_KEY_FILE: /secrets/PORKBUN_SECRET_API_KEY
     restart: unless-stopped
     depends_on:
       - socket-proxy

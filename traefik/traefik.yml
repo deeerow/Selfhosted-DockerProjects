@@ -20,9 +20,9 @@ entryPoints:
         # Generate a wildcard domain certificate
         certResolver: letsencrypt
         domains:
-          - main: nightowls.duckdns.org   # change to your domain
+          - main: nightowls.pro   # change to your domain
             sans:
-              - '*.nightowls.duckdns.org' # change to your domain
+              - '*.nightowls.pro' # change to your domain
       middlewares:
         - securityHeaders@file
 
@@ -34,7 +34,7 @@ providers:
     watch: true
     network: proxy   # change to your docker network name
     # Default host rule to containername.domain.example
-    defaultRule: "Host(`{{ index .Labels \"com.docker.compose.service\"}}.nightowls.duckdns.org`)" # replace with your domain
+    defaultRule: "Host(`{{ index .Labels \"com.docker.compose.service\"}}.nightowls.pro`)" # replace with your domain
     endpoint: "tcp://socket-proxy:2375"
     swarmModeRefreshSeconds: 15s
     exposedByDefault: false
@@ -50,8 +50,9 @@ certificatesResolvers:
     acme:
       email: dee.nightowls@gmail.com
       storage: /etc/traefik/acme.json
+      #caServer: https://acme-staging-v02.api.letsencrypt.org/directory   # staging server, comment this out to use prod
       dnsChallenge:
-        provider: duckdns
+        provider: porkbun
         # Used to make sure the dns challenge is propagated to the rights dns servers
         resolvers:
           - "1.1.1.1:53"

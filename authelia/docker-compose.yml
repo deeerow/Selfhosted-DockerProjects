@@ -39,11 +39,12 @@ services:
       - 6379
     volumes:
       - ${APP_DIR:?err}/authelia/redis:/redis/bitnami/
+      - ${APP_DIR:?err}/authelia/secrets:/secrets
     labels:
       com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: ${CONTAINER_TIME_ZONE}
-      REDIS_PASSWORD: ${REDIS_PASS:?err}
+      REDIS_PASSWORD_FILE: /secrets/REDIS_PASSWORD
     networks:
       - secure
     restart: unless-stopped
@@ -55,9 +56,10 @@ services:
       - 3306
     volumes:
       - ${APP_DIR:?err}/authelia/mariadb:/config
+      - ${APP_DIR:?err}/authelia/secrets:/secrets
     environment:
       TZ: ${CONTAINER_TIME_ZONE}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASS:?err}
+      MYSQL_ROOT_PASSWORD_FILE: /secrets/MYSQL_ROOT_PASSWORD
     networks:
       - secure
     restart: unless-stopped
@@ -72,13 +74,14 @@ services:
       - ${APP_DIR:?err}/authelia/openldap/certificates:/container/service/slapd/assets/certs
       - ${APP_DIR:?err}/authelia/openldap/slapd/database:/var/lib/ldap
       - ${APP_DIR:?err}/authelia/openldap/slapd/config:/etc/ldap/slapd.d
+      - ${APP_DIR:?err}/authelia/secrets:/secrets
     environment:
       TZ: ${CONTAINER_TIME_ZONE}
       LDAP_ORGANISATION: "${LDAP_ORGANISATION:?err}"
       LDAP_DOMAIN: "${LDAP_DOMAIN:?err}"
       LDAP_ADMIN_USERNAME: "${LDAP_ADMIN_USERNAME:?err}"
-      LDAP_ADMIN_PASSWORD: "${LDAP_ADMIN_PASSWORD:?err}"
-      LDAP_CONFIG_PASSWORD: "${LDAP_CONFIG_PASSWORD:?err}"
+      LDAP_ADMIN_PASSWORD_FILE: /secrets/LDAP_ADMIN_PASSWORD
+      LDAP_CONFIG_PASSWORD_FILE: /secrets/LDAP_CONFIG_PASSWORD
       LDAP_BASE_DN: "${LDAP_BASE_DN:?err}"
       LDAP_TLS_CRT_FILENAME: "${LDAP_TLS_CRT_FILENAME:?err}"
       LDAP_TLS_KEY_FILENAME: "${LDAP_TLS_KEY_FILENAME:?err}"

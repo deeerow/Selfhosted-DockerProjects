@@ -4,7 +4,7 @@ http:
     # Authelia guard
     auth:
       forwardauth:
-        address: http://auth:9091/api/verify?rd=https://auth.nightowls.duckdns.org/  # replace auth with your authelia container name
+        address: http://auth:9091/api/verify?rd=https://auth.nightowls.pro/  # replace auth with your authelia container name
         trustForwardHeader: true
         authResponseHeaders:
           - Remote-User
@@ -29,7 +29,7 @@ http:
         fail2ban:
           blacklist:
             ip:
-              #- 192.168.0.0/24
+              - 192.168.0.0/24
           rules:
             action: ""
             actionAbuseipdb: ""
@@ -57,7 +57,6 @@ http:
             ip:
               - ::1
               - 127.0.0.1
-              - 192.168.50.1
           logLevel: "INFO"
 
     # log4j plugin define
@@ -91,6 +90,7 @@ http:
 tls:
   options:
     default:
+      maxVersion: VersionTLS13
       minVersion: VersionTLS12
       cipherSuites:
         - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256

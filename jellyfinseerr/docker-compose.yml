@@ -34,7 +34,7 @@ services:
       traefik.enable: true
       traefik.http.routers.jellyseerr.entryPoints: https
 
-      com.centurelinklabs.watchtower.enable: true
+      com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: ${CONTAINER_TIME_ZONE:?err}
       PGID: ${ID:?err}

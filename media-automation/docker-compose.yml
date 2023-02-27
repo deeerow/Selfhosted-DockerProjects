@@ -36,7 +36,7 @@ services:
       traefik.http.routers.sonarr.entryPoints: https
       traefik.http.routers.sonarr.middlewares: auth@file
 
-      com.centurelinklabs.watchtower.enable: true
+      com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: ${CONTAINER_TIME_ZONE:?err}
       PGID: ${ID:?err}
@@ -66,7 +66,7 @@ services:
       traefik.http.routers.qbittorrent.middlewares: auth@file
       traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
 
-      com.centurelinklabs.watchtower.enable: true
+      com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: ${CONTAINER_TIME_ZONE:?err}
       PGID: ${ID:?err}
@@ -93,7 +93,7 @@ services:
       traefik.http.routers.jackett.entryPoints: https
       traefik.http.routers.jackett.middlewares: auth@file
 
-      com.centurelinklabs.watchtower.enable: true
+      com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: ${CONTAINER_TIME_ZONE:?err}
       PGID: ${ID:?err}
