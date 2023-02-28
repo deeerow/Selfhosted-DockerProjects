@@ -9,8 +9,6 @@ services:
       - ${APP_DIR:?err}/jellyfin:/config:rw
       - ${MEDIA_DIR:?err}:/data:ro
       - ${TRANSCODE_DIR:?err}:/transcode:rw
-    networks:
-      - proxy
     environment:
       TZ: ${CONTAINER_TIME_ZONE:?err}
       PGID: ${ID:?err}
@@ -21,6 +19,8 @@ services:
       traefik.http.routers.jellyfin.entryPoints: https
 
       com.centurylinklabs.watchtower.enable: true
+    networks:
+      - proxy
     restart: unless-stopped
 
   jellyseerr:

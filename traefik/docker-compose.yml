@@ -33,16 +33,16 @@ services:
     image: tecnativa/docker-socket-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    networks:
-      - secure
+    labels:
+      com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: ${CONTAINER_TIME_ZONE:?err}
       CONTAINERS: 1
       POST: 0
     privileged: true
+    networks:
+      - secure
     restart: unless-stopped
-    labels:
-      com.centurylinklabs.watchtower.enable: true
 
 networks:
   proxy:
