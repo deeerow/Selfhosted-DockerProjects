@@ -4,14 +4,14 @@
 # ignore letsencrpyt acme.json file
 acme.json
 
-#ignoring authelia secrets directory
+# ignoring secrets directories
 /authelia/secrets
+/traefik/secrets
 
-#ignoring all local docker directories
+# ignoring all local docker data directories
 /authelia/openldap/
 /jellyfinseerr/jellyfin/
 /jellyfinseerr/jellyseerr/
-/media-automation/jackett/
 /media-automation/prowlarr/
 /media-automation/qbittorrent/
 /media-automation/radarr/
