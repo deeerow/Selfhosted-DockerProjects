@@ -6,17 +6,17 @@ services:
     expose:
       - 9091
     volumes:
-      - ${APP_DIR:?err}/authelia/config:/config
-      - ${APP_DIR:?err}/authelia/secrets:/secrets
+      - ./config:/config
+      - ./secrets:/secrets:ro
     labels:
       traefik.enable: true
       traefik.http.routers.auth.entryPoints: https
 
       com.centurylinklabs.watchtower.enable: true
     environment:
-      TZ: ${CONTAINER_TIME_ZONE}
-      PUID: ${PUID}
-      PGID: ${PGID}
+      TZ: America/Vancouver
+      PUID: ${ID:?err}
+      PGID: ${ID:?err}
       AUTHELIA_JWT_SECRET_FILE: /secrets/JWT_SECRET
       AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE: /secrets/LDAP_ADMIN_PASSWORD
       AUTHELIA_SESSION_SECRET_FILE: /secrets/SESSION_SECRET
@@ -38,12 +38,12 @@ services:
     expose:
       - 6379
     volumes:
-      - ${APP_DIR:?err}/authelia/redis:/redis/bitnami/
-      - ${APP_DIR:?err}/authelia/secrets:/secrets
+      - ./redis:/redis/bitnami/
+      - ./secrets:/secrets:ro
     labels:
       com.centurylinklabs.watchtower.enable: true
     environment:
-      TZ: ${CONTAINER_TIME_ZONE}
+      TZ: America/Vancouver
       REDIS_PASSWORD_FILE: /secrets/REDIS_PASSWORD
     networks:
       - secure
@@ -55,10 +55,12 @@ services:
     expose:
       - 3306
     volumes:
-      - ${APP_DIR:?err}/authelia/mariadb:/config
-      - ${APP_DIR:?err}/authelia/secrets:/secrets
+      - ./mariadb:/config
+      - ./secrets:/secrets:ro
+    labels:
+      com.centurylinklabs.watchtower.enable: true
     environment:
-      TZ: ${CONTAINER_TIME_ZONE}
+      TZ: America/Vancouver
       MYSQL_ROOT_PASSWORD_FILE: /secrets/MYSQL_ROOT_PASSWORD
     networks:
       - secure
@@ -71,12 +73,14 @@ services:
       - 389
       - 636
     volumes:
-      - ${APP_DIR:?err}/authelia/openldap/certificates:/container/service/slapd/assets/certs
-      - ${APP_DIR:?err}/authelia/openldap/slapd/database:/var/lib/ldap
-      - ${APP_DIR:?err}/authelia/openldap/slapd/config:/etc/ldap/slapd.d
-      - ${APP_DIR:?err}/authelia/secrets:/secrets
+      - ./openldap/certificates:/container/service/slapd/assets/certs
+      - ./openldap/slapd/database:/var/lib/ldap
+      - ./openldap/slapd/config:/etc/ldap/slapd.d
+      - ./secrets:/secrets:ro
+    labels:
+      com.centurylinklabs.watchtower.enable: true  
     environment:
-      TZ: ${CONTAINER_TIME_ZONE}
+      TZ: America/Vancouver
       LDAP_ORGANISATION: "${LDAP_ORGANISATION:?err}"
       LDAP_DOMAIN: "${LDAP_DOMAIN:?err}"
       LDAP_BASE_DN: "${LDAP_BASE_DN:?err}"
@@ -87,8 +91,6 @@ services:
       LDAP_ADMIN_PASSWORD_FILE: /secrets/LDAP_ADMIN_PASSWORD
       LDAP_CONFIG_PASSWORD_FILE: /secrets/LDAP_CONFIG_PASSWORD
       LDAP_RFC2307BIS_SCHEMA: 'true'
-
-      com.centurylinklabs.watchtower.enable: true  
     networks:
       - secure
     restart: unless-stopped
@@ -98,24 +100,25 @@ services:
     image: osixia/phpldapadmin:latest
     expose:
       - 80
+    volumes:
+     - ./openldap/admin:/var/www/phpldapadmin   # used to make edits to the config file
     labels:
       traefik.enable: true
       traefik.http.routers.ldapadmin.entryPoints: https
       traefik.http.routers.ldapadmin.middlewares: auth@file
+      
+      com.centurylinklabs.watchtower.enable: true
     environment:
-      TZ: ${CONTAINER_TIME_ZONE}
+      TZ: America/Vancouver
+      com.centurylinklabs.watchtower.enable: true
       PHPLDAPADMIN_LDAP_HOSTS: openldap
       PHPLDAPADMIN_HTTPS: false
-
-      com.centurylinklabs.watchtower.enable: true
-    volumes:
-     - ${APP_DIR:?err}/authelia/openldap/admin:/var/www/phpldapadmin   # used to make edits to the config file
-    depends_on:
-      - openldap
     networks:
       - proxy
       - secure
     restart: unless-stopped
+    depends_on:
+      - openldap
 
 networks:
   proxy:

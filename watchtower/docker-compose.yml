@@ -9,7 +9,7 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: true
     environment:
-      TZ: ${CONTAINER_TIME_ZONE:?err}
+      TZ: America/Vancouver
       WATCHTOWER_LABEL_ENABLE: true
       WATCHTOWER_SCHEDULE: 0 0 4 * * SUN
       WATCHTOWER_CLEANUP: false

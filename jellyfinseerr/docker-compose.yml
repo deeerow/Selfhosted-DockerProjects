@@ -6,11 +6,11 @@ services:
     ports:
       - 8096:8096
     volumes:
-      - ${APP_DIR:?err}/jellyfin:/config:rw
+      - ./jellyfin:/config:rw
       - ${MEDIA_DIR:?err}:/data:ro
       - ${TRANSCODE_DIR:?err}:/transcode:rw
     environment:
-      TZ: ${CONTAINER_TIME_ZONE:?err}
+      TZ: America/Vancouver
       PGID: ${ID:?err}
       PUID: ${ID:?err}
       UMASK: ${UMASK:?err}
@@ -29,14 +29,14 @@ services:
     ports:
       - 5055:5055
     volumes:
-      - ${APP_DIR:?err}/jellyseerr:/app/config
+      - ./jellyseerr:/app/config
     labels:
       traefik.enable: true
       traefik.http.routers.jellyseerr.entryPoints: https
 
       com.centurylinklabs.watchtower.enable: true
     environment:
-      TZ: ${CONTAINER_TIME_ZONE:?err}
+      TZ: America/Vancouver
       PGID: ${ID:?err}
       PUID: ${ID:?err}
     networks:

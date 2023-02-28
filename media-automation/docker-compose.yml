@@ -6,7 +6,7 @@ services:
     expose:
       - 7878
     volumes:
-      - ${APP_DIR:?err}/radarr:/config
+      - ./radarr:/config
       - ${MEDIA_DIR:?err}:/data
     labels:
       traefik.enable: true
@@ -15,7 +15,7 @@ services:
 
       com.centurylinklabs.watchtower.enable: true
     environment:
-      TZ: ${CONTAINER_TIME_ZONE:?err}
+      TZ: America/Vancouver
       PGID: ${ID:?err}
       PUID: ${ID:?err}
       UMASK: ${UMASK:?err}
@@ -29,7 +29,7 @@ services:
     expose:
       - 8989
     volumes:
-      - ${APP_DIR:?err}/sonarr:/config
+      - ./sonarr:/config
       - ${MEDIA_DIR:?err}:/data
     labels:
       traefik.enable: true
@@ -38,7 +38,7 @@ services:
 
       com.centurylinklabs.watchtower.enable: true
     environment:
-      TZ: ${CONTAINER_TIME_ZONE:?err}
+      TZ: America/Vancouver
       PGID: ${ID:?err}
       PUID: ${ID:?err}
       UMASK: ${UMASK:?err}
@@ -58,7 +58,7 @@ services:
       - 8999:8999
       - 8999:8999/udp
     volumes:
-      - ${APP_DIR:?err}/qbittorrent:/config
+      - ./qbittorrent:/config
       - ${MEDIA_DIR:?err}/torrents:/data/torrents:rw
     labels:
       traefik.enable: true
@@ -68,7 +68,7 @@ services:
 
       com.centurylinklabs.watchtower.enable: true
     environment:
-      TZ: ${CONTAINER_TIME_ZONE:?err}
+      TZ: America/Vancouver
       PGID: ${ID:?err}
       PUID: ${ID:?err}
       UMASK: ${UMASK:?err}
@@ -87,7 +87,7 @@ services:
     expose:
       - 9696
     volumes:
-      - ${APP_DIR:?err}/prowlarr:/config
+      - ./prowlarr:/config
     labels:
       traefik.enable: true
       traefik.http.routers.jackett.entryPoints: https
@@ -95,7 +95,7 @@ services:
 
       com.centurylinklabs.watchtower.enable: true
     environment:
-      TZ: ${CONTAINER_TIME_ZONE:?err}
+      TZ: America/Vancouver
       PGID: ${ID:?err}
       PUID: ${ID:?err}
     networks:

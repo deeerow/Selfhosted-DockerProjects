@@ -11,6 +11,8 @@ services:
       traefik.http.routers.adminer.middlewares: auth@file
 
       com.centurylinklabs.watchtower.enable: true
+    environment:
+      TZ: America/Vancouver
     networks:
       - secure
     restart: unless-stopped
