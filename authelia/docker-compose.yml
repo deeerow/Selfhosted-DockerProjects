@@ -7,7 +7,7 @@ services:
       - 9091
     volumes:
       - ./config:/config
-      - ./secrets:/secrets:ro
+      - ./secrets:/secrets
     labels:
       traefik.enable: true
       traefik.http.routers.auth.entryPoints: https
@@ -39,7 +39,7 @@ services:
       - 6379
     volumes:
       - ./redis:/redis/bitnami/
-      - ./secrets:/secrets:ro
+      - ./secrets:/secrets
     labels:
       com.centurylinklabs.watchtower.enable: true
     environment:
@@ -56,7 +56,7 @@ services:
       - 3306
     volumes:
       - ./mariadb:/config
-      - ./secrets:/secrets:ro
+      - ./secrets:/secrets
     labels:
       com.centurylinklabs.watchtower.enable: true
     environment:
@@ -76,7 +76,7 @@ services:
       - ./openldap/certificates:/container/service/slapd/assets/certs
       - ./openldap/slapd/database:/var/lib/ldap
       - ./openldap/slapd/config:/etc/ldap/slapd.d
-      - ./secrets:/secrets:ro
+      - ./secrets:/secrets
     labels:
       com.centurylinklabs.watchtower.enable: true  
     environment:
