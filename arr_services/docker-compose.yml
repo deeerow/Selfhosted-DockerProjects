@@ -74,6 +74,8 @@ services:
       - 6767
     volumes:
       - ./bazarr:/config
+      - ${MEDIA_DIR:?err}/media/movies:/data/media/movies   # path for movies
+      - ${MEDIA_DIR:?err}/media/tv:/data/media/tv   # path for tvseries
     labels:
       traefik.enable: true
       traefik.http.routers.bazarr.entryPoints: https
