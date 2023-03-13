@@ -12,7 +12,8 @@ acme.json
 /authelia/openldap/
 /jellyfinseerr/jellyfin/
 /jellyfinseerr/jellyseerr/
-/media-automation/prowlarr/
-/media-automation/qbittorrent/
-/media-automation/radarr/
-/media-automation/sonarr/
+/qbittorrent/qbittorrent/
+/arr_services/prowlarr/
+/arr_services/radarr/
+/arr_services/sonarr/
+/arr_services/bazarr/

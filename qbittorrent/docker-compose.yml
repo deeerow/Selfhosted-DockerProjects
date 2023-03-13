@@ -1,0 +1,41 @@
+version: '3.9'
+services:
+  qbittorrent:
+    container_name: qbittorrent
+    image: dyonr/qbittorrentvpn:latest
+    cap_add:
+    - NET_ADMIN
+    privileged: true
+    expose:
+      - 8080
+    ports:
+      - 8999:8999
+      - 8999:8999/udp
+    volumes:
+      - ./qbittorrent:/config
+      - ${MEDIA_DIR:?err}/torrents:/data/torrents:rw
+    labels:
+      traefik.enable: true
+      traefik.http.routers.qbittorrent.entryPoints: https
+      traefik.http.routers.qbittorrent.middlewares: auth@file
+      traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
+
+      com.centurylinklabs.watchtower.enable: true
+    environment:
+      TZ: America/Vancouver
+      PGID: ${ID:?err}
+      PUID: ${ID:?err}
+      UMASK: ${UMASK:?err}
+      VPN_ENABLED: yes
+      VPN_TYPE: openvpn
+      VPN_USERNAME: ${VPN_USERNAME}
+      VPN_PASSWORD: ${VPN_PASSWORD}
+      LAN_NETWORK: 192.168.0.0/24, 172.18.0.0/24
+    networks:
+      - proxy
+    restart: unless-stopped
+
+networks:
+  proxy:
+    driver: bridge
+    external: true
