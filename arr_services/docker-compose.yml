@@ -64,7 +64,7 @@ services:
       PGID: ${ID:?err}
       PUID: ${ID:?err}
     networks:
-      - proxy 
+      - proxy
     restart: unless-stopped
 
   bazarr:

@@ -20,7 +20,7 @@ services:
       AUTHELIA_JWT_SECRET_FILE: /secrets/JWT_SECRET
       AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE: /secrets/LDAP_ADMIN_PASSWORD
       AUTHELIA_SESSION_SECRET_FILE: /secrets/SESSION_SECRET
-      AUTHELIA_SESSION_REDIS_PASSWORD_FILE: /secrets/REDIS_PASS
+      AUTHELIA_SESSION_REDIS_PASSWORD_FILE: /secrets/REDIS_PASSWORD
       AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /secrets/STORAGE_ENCRYPTION_KEY
       AUTHELIA_STORAGE_MYSQL_PASSWORD_FILE: /secrets/STORAGE_PASSWORD
       AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE: /secrets/SMTP_PASSWORD
@@ -78,7 +78,7 @@ services:
       - ./openldap/slapd/config:/etc/ldap/slapd.d
       - ./secrets:/secrets
     labels:
-      com.centurylinklabs.watchtower.enable: true  
+      com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: America/Vancouver
       LDAP_ORGANISATION: "${LDAP_ORGANISATION:?err}"
@@ -106,7 +106,7 @@ services:
       traefik.enable: true
       traefik.http.routers.ldapadmin.entryPoints: https
       traefik.http.routers.ldapadmin.middlewares: auth@file
-      
+
       com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: America/Vancouver
