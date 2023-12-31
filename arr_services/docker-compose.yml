@@ -1,6 +1,19 @@
-version: '3.9'
+x-app: &default
+  restart: unless-stopped
+  networks:
+    -  proxy
+  environment:
+    TZ: America/Vancouver
+    PGID: ${PGID:?err}
+    PUID: ${PUID:?err}
+    UMASK: ${UMASK:?err}
+  labels: &labels
+    traefik.enable: true
+    com.centurylinklabs.watchtower.enable: true
+
 services:
   radarr:
+    <<: *default
     container_name: radarr
     image: lscr.io/linuxserver/radarr:latest
     expose:
@@ -9,21 +22,11 @@ services:
       - ./radarr:/config
       - ${MEDIA_DIR:?err}:/data
     labels:
-      traefik.enable: true
-      traefik.http.routers.radarr.entryPoints: https
+      <<: *labels
       traefik.http.routers.radarr.middlewares: auth@file
 
-      com.centurylinklabs.watchtower.enable: true
-    environment:
-      TZ: America/Vancouver
-      PGID: ${ID:?err}
-      PUID: ${ID:?err}
-      UMASK: ${UMASK:?err}
-    networks:
-      - proxy
-    restart: unless-stopped
-
   sonarr:
+    <<: *default
     container_name: sonarr
     image: lscr.io/linuxserver/sonarr:latest
     expose:
@@ -32,21 +35,11 @@ services:
       - ./sonarr:/config
       - ${MEDIA_DIR:?err}:/data
     labels:
-      traefik.enable: true
-      traefik.http.routers.sonarr.entryPoints: https
+      <<: *labels
       traefik.http.routers.sonarr.middlewares: auth@file
 
-      com.centurylinklabs.watchtower.enable: true
-    environment:
-      TZ: America/Vancouver
-      PGID: ${ID:?err}
-      PUID: ${ID:?err}
-      UMASK: ${UMASK:?err}
-    networks:
-      - proxy
-    restart: unless-stopped
-
   prowlarr:
+    <<: *default
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
     expose:
@@ -54,20 +47,11 @@ services:
     volumes:
       - ./prowlarr:/config
     labels:
-      traefik.enable: true
-      traefik.http.routers.prowlarr.entryPoints: https
+      <<: *labels
       traefik.http.routers.prowlarr.middlewares: auth@file
 
-      com.centurylinklabs.watchtower.enable: true
-    environment:
-      TZ: America/Vancouver
-      PGID: ${ID:?err}
-      PUID: ${ID:?err}
-    networks:
-      - proxy
-    restart: unless-stopped
-
   bazarr:
+    <<: *default
     image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr
     expose:
@@ -76,20 +60,9 @@ services:
       - ./bazarr:/config
       - ${MEDIA_DIR:?err}:/data
     labels:
-      traefik.enable: true
-      traefik.http.routers.bazarr.entryPoints: https
+      <<: *labels
       traefik.http.routers.bazarr.middlewares: auth@file
-
-      com.centurylinklabs.watchtower.enable: true
-    environment:
-      TZ: America/Vancouver
-      PGID: ${ID:?err}
-      PUID: ${ID:?err}
-    networks:
-      - proxy
-    restart: unless-stopped
 
 networks:
   proxy:
-    driver: bridge
     external: true

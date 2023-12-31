@@ -1,4 +1,3 @@
-version: '3.9'
 services:
   adminer:
     container_name: adminer
@@ -7,9 +6,7 @@ services:
       - 8282:8282
     labels:
       traefik.enable: true
-      traefik.http.routers.adminer.entryPoints: https
       traefik.http.routers.adminer.middlewares: auth@file
-
       com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: America/Vancouver

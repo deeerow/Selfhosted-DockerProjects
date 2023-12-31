@@ -1,4 +1,3 @@
-version: '3.9'
 services:
   qbittorrent:
     container_name: qbittorrent
@@ -16,15 +15,14 @@ services:
       - ${MEDIA_DIR:?err}/torrents:/data/torrents:rw
     labels:
       traefik.enable: true
-      traefik.http.routers.qbittorrent.entryPoints: https
       traefik.http.routers.qbittorrent.middlewares: auth@file
       traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
 
       com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: America/Vancouver
-      PGID: ${ID:?err}
-      PUID: ${ID:?err}
+      PGID: ${PGID:?err}
+      PUID: ${PUID:?err}
       UMASK: ${UMASK:?err}
       VPN_ENABLED: yes
       VPN_TYPE: openvpn

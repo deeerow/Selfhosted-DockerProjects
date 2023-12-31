@@ -1,6 +1,5 @@
-version: '3.9'
 services:
-  auth:
+  auth: # authelia docker service
     container_name: auth
     image: authelia/authelia:latest
     expose:
@@ -10,13 +9,11 @@ services:
       - ./secrets:/secrets
     labels:
       traefik.enable: true
-      traefik.http.routers.auth.entryPoints: https
-
       com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: America/Vancouver
-      PUID: ${ID:?err}
-      PGID: ${ID:?err}
+      PUID: ${PUID:?err}
+      PGID: ${PGID:?err}
       AUTHELIA_JWT_SECRET_FILE: /secrets/JWT_SECRET
       AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE: /secrets/LDAP_ADMIN_PASSWORD
       AUTHELIA_SESSION_SECRET_FILE: /secrets/SESSION_SECRET
@@ -104,9 +101,7 @@ services:
      - ./openldap/admin:/var/www/phpldapadmin   # used to make edits to the config file
     labels:
       traefik.enable: true
-      traefik.http.routers.ldapadmin.entryPoints: https
       traefik.http.routers.ldapadmin.middlewares: auth@file
-
       com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: America/Vancouver
