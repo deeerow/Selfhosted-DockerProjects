@@ -11,7 +11,7 @@ services:
       - 8999:8999
       - 8999:8999/udp
     volumes:
-      - ./qbittorrent:/config
+      - ./:/config
       - ${MEDIA_DIR:?err}/torrents:/data/torrents:rw
     labels:
       traefik.enable: true
@@ -28,7 +28,7 @@ services:
       VPN_TYPE: openvpn
       VPN_USERNAME: ${VPN_USERNAME}
       VPN_PASSWORD: ${VPN_PASSWORD}
-      LAN_NETWORK: 192.168.0.0/24, 172.18.0.0/24
+      LAN_NETWORK: 192.168.0.0/24, 172.20.0.0/24
     networks:
       - proxy
     restart: unless-stopped

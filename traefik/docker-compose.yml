@@ -3,8 +3,7 @@ services:
     container_name: traefik
     image: traefik:latest
     ports:
-      - 80:80
-      - 443:443
+      - 443:443   # only need https port forwarded, due to current traefik setup
       - 8080:8080  # traefik drashboard port
     volumes:
       - ./:/etc/traefik/

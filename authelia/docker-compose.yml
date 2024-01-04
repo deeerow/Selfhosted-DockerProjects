@@ -1,5 +1,13 @@
+x-app: &default
+  restart: unless-stopped
+  environment: &environment
+    TZ: America/Vancouver
+  labels: &labels
+    com.centurylinklabs.watchtower.enable: true
+
 services:
-  auth: # authelia docker service
+  auth:   # authelia service
+    <<: *default
     container_name: auth
     image: authelia/authelia:latest
     expose:
@@ -8,10 +16,10 @@ services:
       - ./config:/config
       - ./secrets:/secrets
     labels:
+      <<: *labels
       traefik.enable: true
-      com.centurylinklabs.watchtower.enable: true
     environment:
-      TZ: America/Vancouver
+      <<: *environment
       PUID: ${PUID:?err}
       PGID: ${PGID:?err}
       AUTHELIA_JWT_SECRET_FILE: /secrets/JWT_SECRET
@@ -22,14 +30,14 @@ services:
       AUTHELIA_STORAGE_MYSQL_PASSWORD_FILE: /secrets/STORAGE_PASSWORD
       AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE: /secrets/SMTP_PASSWORD
     networks:
-      - proxy
       - secure
-    restart: unless-stopped
+      - proxy
     depends_on:
       - redis
       - mariadb
 
   redis:
+    <<: *default
     container_name: redis
     image: bitnami/redis:latest
     expose:
@@ -37,16 +45,14 @@ services:
     volumes:
       - ./redis:/redis/bitnami/
       - ./secrets:/secrets
-    labels:
-      com.centurylinklabs.watchtower.enable: true
     environment:
-      TZ: America/Vancouver
+      <<: *environment
       REDIS_PASSWORD_FILE: /secrets/REDIS_PASSWORD
     networks:
       - secure
-    restart: unless-stopped
 
   mariadb:
+    <<: *default
     container_name: mariadb
     image: mariadb
     expose:
@@ -54,16 +60,14 @@ services:
     volumes:
       - ./mariadb:/config
       - ./secrets:/secrets
-    labels:
-      com.centurylinklabs.watchtower.enable: true
     environment:
-      TZ: America/Vancouver
+      <<: *environment
       MYSQL_ROOT_PASSWORD_FILE: /secrets/MYSQL_ROOT_PASSWORD
     networks:
       - secure
-    restart: unless-stopped
 
   openldap:
+    <<: *default
     container_name: openldap
     image: osixia/openldap:latest
     expose:
@@ -74,10 +78,8 @@ services:
       - ./openldap/slapd/database:/var/lib/ldap
       - ./openldap/slapd/config:/etc/ldap/slapd.d
       - ./secrets:/secrets
-    labels:
-      com.centurylinklabs.watchtower.enable: true
     environment:
-      TZ: America/Vancouver
+      <<: *environment
       LDAP_ORGANISATION: "${LDAP_ORGANISATION:?err}"
       LDAP_DOMAIN: "${LDAP_DOMAIN:?err}"
       LDAP_BASE_DN: "${LDAP_BASE_DN:?err}"
@@ -90,9 +92,9 @@ services:
       LDAP_RFC2307BIS_SCHEMA: 'true'
     networks:
       - secure
-    restart: unless-stopped
-
+  
   ldapadmin:
+    <<: *default
     container_name: ldapadmin
     image: osixia/phpldapadmin:latest
     expose:
@@ -100,25 +102,21 @@ services:
     volumes:
      - ./openldap/admin:/var/www/phpldapadmin   # used to make edits to the config file
     labels:
+      <<: *labels
       traefik.enable: true
-      traefik.http.routers.ldapadmin.middlewares: auth@file
-      com.centurylinklabs.watchtower.enable: true
+      traefik.http.routers.ldapadmin.middlewares: auth@file   # applies authelia security
     environment:
-      TZ: America/Vancouver
-      com.centurylinklabs.watchtower.enable: true
+      <<: *environment
       PHPLDAPADMIN_LDAP_HOSTS: openldap
       PHPLDAPADMIN_HTTPS: false
     networks:
-      - proxy
       - secure
-    restart: unless-stopped
+      - proxy
     depends_on:
       - openldap
 
 networks:
   proxy:
-    driver: bridge
     external: true
   secure:
-    driver: bridge
     external: true
