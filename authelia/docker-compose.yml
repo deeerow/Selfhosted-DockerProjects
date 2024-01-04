@@ -54,7 +54,7 @@ services:
   mariadb:
     <<: *default
     container_name: mariadb
-    image: mariadb
+    image: mariadb:latest
     expose:
       - 3306
     volumes:

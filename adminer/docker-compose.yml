@@ -1,12 +1,12 @@
 services:
   adminer:
     container_name: adminer
-    image: adminer
+    image: adminer:latest
     ports:
       - 8282:8282
     labels:
       traefik.enable: true
-      traefik.http.routers.adminer.middlewares: auth@file
+      traefik.http.routers.adminer.middlewares: auth@file   # applies authelia security
       com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: America/Vancouver
