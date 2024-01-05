@@ -15,9 +15,8 @@ services:
       - ${MEDIA_DIR:?err}/torrents:/data/torrents:rw
     labels:
       traefik.enable: true
-      traefik.http.routers.qbittorrent.middlewares: auth@file
-      traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
-
+      traefik.http.routers.qbittorrent.middlewares: auth@file   # enabling authelia security login
+      traefik.http.services.qbittorrent.loadbalancer.server.port: 8080   # load balancing the port with traefik dashboard
       com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: America/Vancouver
@@ -35,5 +34,4 @@ services:
 
 networks:
   proxy:
-    driver: bridge
     external: true

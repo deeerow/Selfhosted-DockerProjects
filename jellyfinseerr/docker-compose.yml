@@ -10,8 +10,8 @@ services:
       - ${TRANSCODE_DIR:?err}:/transcode:rw
     environment:
       TZ: America/Vancouver
-      PGID: ${ID:?err}
-      PUID: ${ID:?err}
+      PGID: ${PGID:?err}
+      PUID: ${PUID:?err}
       UMASK: ${UMASK:?err}
     labels:
       traefik.enable: true
@@ -32,13 +32,12 @@ services:
       com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: America/Vancouver
-      PGID: ${ID:?err}
-      PUID: ${ID:?err}
+      PGID: ${PGID:?err}
+      PUID: ${PUID:?err}
     networks:
       - proxy
     restart: unless-stopped
 
 networks:
   proxy:
-    driver: bridge
     external: true

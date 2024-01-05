@@ -29,35 +29,13 @@ http:
         fail2ban:
           blacklist:
             ip:
-              - 192.168.0.0/24
           rules:
-            action: ""
-            actionAbuseipdb: ""
-            backend: ""
-            banaction: ""
-            banactionAllports: ""
-            bantime: 6h
-            chain: ""
-            destemail: ""
-            enabled: "true"
-            fail2banAgent: ""
-            filter: ""
-            findtime: 10m
-            ignorecommand: ""
-            logencoding: UTF-8
-            maxretry: "4"
-            mode: ""
-            mta: ""
-            ports: 0:8000
-            protocol: ""
-            sender: ""
-            urlregexp: ""
-            usedns: ""
+            bantime: "6h"
+            findtime: "10m"
+            maxretry: 4
+            enabled: true
           whitelist:
-            ip:
-              - ::1
-              - 127.0.0.1
-          logLevel: "INFO"
+            ip: ::1,127.0.0.1,192.168.0.0/24
 
     # log4j plugin define
     my-plugin-log4shell:

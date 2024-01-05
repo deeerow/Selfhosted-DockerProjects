@@ -13,10 +13,8 @@ services:
       - secure  # have a second one for sensitive containers
     labels:
       traefik.enable: true   # Enable Traefik reverse proxy
-      traefik.http.routers.api.entryPoints: https    # Set the Traefik entry point.
       traefik.http.routers.api.service: api@internal    # Enable Traefik API.
-      traefik.http.routers.api.middlewares: auth@file  # enabling authelia login to traefik
-
+      traefik.http.routers.api.middlewares: auth@file   # enabling authelia security to traefik
       com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: America/Vancouver
@@ -44,9 +42,7 @@ services:
 
 networks:
   proxy:
-    driver: bridge
     external: true
 
   secure:
-    driver: bridge
     external: true

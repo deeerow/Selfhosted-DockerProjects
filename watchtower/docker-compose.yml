@@ -43,5 +43,4 @@ services:
 
 networks:
   secure:
-    driver: bridge
     external: true
