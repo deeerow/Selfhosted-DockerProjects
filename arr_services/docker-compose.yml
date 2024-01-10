@@ -58,7 +58,7 @@ services:
       - 6767
     volumes:
       - ./bazarr:/config
-      - ${MEDIA_DIR:?err}/media:/data/media
+      - ${MEDIA_DIR:?err}media:/data/media
     labels:
       <<: *labels
       traefik.http.routers.bazarr.middlewares: auth@file
