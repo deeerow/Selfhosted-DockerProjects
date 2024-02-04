@@ -1,4 +1,4 @@
-\global:
+global:
   checkNewVersion: true
   sendAnonymousUsage: true
 
