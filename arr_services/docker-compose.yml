@@ -77,6 +77,17 @@ services:
       <<: *labels
       traefik.http.routers.notifiarr.middlewares: auth@file
 
+  flaresolverr:
+    <<: *default
+    container_name: flaresolverr
+    hostname: flaresolverr
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    expose:
+      - 8191
+    labels:
+      <<: *labels
+      traefik.http.routers.flaresolverr.middlewares: auth@file
+
 networks:
   proxy:
     external: true
