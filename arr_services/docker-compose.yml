@@ -50,19 +50,6 @@ services:
       <<: *labels
       traefik.http.routers.prowlarr.middlewares: auth@file
 
-  bazarr:
-    <<: *default
-    image: lscr.io/linuxserver/bazarr:latest
-    container_name: bazarr
-    expose:
-      - 6767
-    volumes:
-      - ./bazarr:/config
-      - ${MEDIA_DIR:?err}media:/data/media
-    labels:
-      <<: *labels
-      traefik.http.routers.bazarr.middlewares: auth@file
-
   notifiarr:
     <<: *default
     container_name: notifiarr
