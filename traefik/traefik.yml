@@ -7,6 +7,9 @@ entryPoints:
   http:
     address: :80
     http:
+      middlewares:
+        - securityHeaders@file   # applying custom security headers on all endpoints
+        - my-plugin-log4shell@file   # applying log4j JNDI attacks plugin on all endpoints
       redirections:
         entryPoint:
           to: https
@@ -25,8 +28,8 @@ entryPoints:
               - '*.nightowls.pro' # change to your domain
       middlewares:
         - securityHeaders@file   # applying custom security headers on all endpoints
-        #- my-fail2ban@file   # applying fail2ban plugin on all endpoints
         - my-plugin-log4shell@file   # applying log4j JNDI attacks plugin on all endpoints
+        - crowdsec-bouncer@file   # applying crowdsec bouncers through all endpoints going through traefik
 
 providers:
   providersThrottleDuration: 2s
@@ -68,13 +71,16 @@ api:
 # log level INFO|DEBUG|ERROR
 log:
   level: INFO
+  filePath: "/var/log/crowdsec/traefik.log"
+
+# giving access to crowdsec to analyze traefik logs
+accessLog:
+  filePath: "/var/log/crowdsec/accesstraefik.log"
+  bufferingSize: 50
 
 # installed plugins provided by traefik
 experimental:
   plugins:
-    fail2ban:
-      moduleName: "github.com/tomMoulard/fail2ban"
-      version: "v0.7.1"
     plugin-log4shell:
       moduleName: "github.com/traefik/plugin-log4shell"
       version: "v0.1.2"

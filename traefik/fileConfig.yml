@@ -23,25 +23,17 @@ http:
           - Remote-Name
           - Remote-Email
 
-    # fail2ban plugin ip white/black list bans
-    my-fail2ban:
-      plugin:
-        fail2ban:
-          blacklist:
-            ip:
-          rules:
-            bantime: "6h"
-            findtime: "10m"
-            maxretry: 4
-            enabled: true
-          whitelist:
-            ip: ::1,127.0.0.1,192.168.0.0/24
-
     # log4j plugin define
     my-plugin-log4shell:
       plugin:
         plugin-log4shell:
           errorCode: "200"
+
+    # crowdsec bouncer rules
+    crowdsec-bouncer:
+      forwardauth:
+        address: http://bouncer-traefik:8080/api/v1/forwardAuth
+        trustForwardHeader: true
 
     # Security headers
     securityHeaders:

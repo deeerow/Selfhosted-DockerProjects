@@ -1,0 +1,47 @@
+services:
+    crowdsec:
+        image: crowdsecurity/crowdsec:latest
+        container_name: crowdsec
+        expose:
+            - 8080
+        volumes:
+            - ./acquis.yaml:/etc/crowdsec/acquis.yaml
+            - ./crowdsec_config/data:/var/lib/crowdsec_config/data
+            - ./crowdsec_config:/etc/crowdsec
+            - /var/log/crowdsec:/var/log/crowdsec:ro  # all the logs in crowdsec folder using inside acquis.yaml
+            - type: bind    # binding the single syslog file
+              source: /var/log/syslog
+              target: /var/log/syslog
+              read_only: true
+        environment:
+            COLLECTIONS: "crowdsecurity/linux crowdsecurity/traefik crowdsecurity/http-cve LePresidente/authelia"
+            TZ: America/Vancouver
+            PGID: ${PGID:?err}
+            PUID: ${PUID:?err}
+        networks:
+            - proxy
+        security_opt:
+            - no-new-privileges:true
+        restart: unless-stopped
+    
+    bouncer-traefik:
+        image: fbonalair/traefik-crowdsec-bouncer
+        container_name: bouncer-traefik
+        environment:
+            TZ: America/Vancouver
+            PGID: ${PGID:?err}
+            PUID: ${PUID:?err}
+            CROWDSEC_BOUNCER_API_KEY: ${CROWDSEC_BOUNCER_API_KEY:?err}
+            CROWDSEC_AGENT_HOST: crowdsec:8080
+            GIN_MOD: release
+        networks:
+            - proxy
+        depends_on:
+            - crowdsec
+        security_opt:
+            - no-new-privileges:true        
+        restart: unless-stopped
+
+networks:
+  proxy:
+    external: true

@@ -18,6 +18,8 @@ services:
       com.centurylinklabs.watchtower.enable: true
     networks:
       - proxy
+    security_opt:
+      - no-new-privileges:true
     restart: unless-stopped
 
   jellyseerr:
@@ -36,6 +38,8 @@ services:
       PUID: ${PUID:?err}
     networks:
       - proxy
+    security_opt:
+      - no-new-privileges:true
     restart: unless-stopped
 
 networks:

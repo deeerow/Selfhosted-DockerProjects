@@ -8,6 +8,7 @@ services:
     volumes:
       - ./:/etc/traefik/
       - ./secrets:/secrets
+      - /var/log/crowdsec/:/var/log/crowdsec/
     networks:
       - proxy   # change to your docker network name
       - secure  # have a second one for sensitive containers
@@ -20,6 +21,8 @@ services:
       TZ: America/Vancouver
       PORKBUN_API_KEY_FILE: /secrets/PORKBUN_API_KEY
       PORKBUN_SECRET_API_KEY_FILE: /secrets/PORKBUN_SECRET_API_KEY
+    security_opt:
+      - no-new-privileges:true
     restart: unless-stopped
     depends_on:
       - socket-proxy
@@ -38,6 +41,8 @@ services:
     privileged: true
     networks:
       - secure
+    security_opt:
+      - no-new-privileges:true
     restart: unless-stopped
 
 networks:

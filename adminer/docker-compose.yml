@@ -12,6 +12,8 @@ services:
       TZ: America/Vancouver
     networks:
       - secure
+    security_opt:
+      - no-new-privileges:true
     restart: unless-stopped
 
 networks:

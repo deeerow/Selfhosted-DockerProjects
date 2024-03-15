@@ -1,0 +1,15 @@
+filenames:
+ - /var/log/syslog
+labels:
+  type: syslog
+---
+filenames:
+  - /var/log/crowdsec/traefik.log
+  - /var/log/crowdsec/accesstraefik.log
+labels:
+  type: traefik
+---
+filenames:
+ - /var/log/crowdsec/authelia.log
+labels:
+  type: authelia

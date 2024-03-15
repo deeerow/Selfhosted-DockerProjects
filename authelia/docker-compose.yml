@@ -4,6 +4,8 @@ x-app: &default
     TZ: America/Vancouver
   labels: &labels
     com.centurylinklabs.watchtower.enable: true
+  security_opt:
+    - no-new-privileges:true
 
 services:
   auth:   # authelia service
@@ -15,6 +17,7 @@ services:
     volumes:
       - ./config:/config
       - ./secrets:/secrets
+      - /var/log/crowdsec:/var/log/crowdsec
     labels:
       <<: *labels
       traefik.enable: true
