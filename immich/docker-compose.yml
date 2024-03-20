@@ -84,12 +84,33 @@ services:
     container_name: immich_postgres
     image: registry.hub.docker.com/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0
     environment:
+      <<: *environment
       POSTGRES_PASSWORD: ${DB_PASSWORD:?err}
       POSTGRES_USER: ${DB_USERNAME:?err}
       POSTGRES_DB: ${DB_DATABASE_NAME:?err}
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./secrets:/secrets
+    networks:
+      - secure
+      
+  pgdbbackup:
+    container_name: immich_db_dumper
+    image: prodrigestivill/postgres-backup-local
+    env_file:
+      - .env
+    environment:
+      <<: *environment
+      POSTGRES_HOST: postgresdb
+      POSTGRES_DB: ${DB_DATABASE_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      SCHEDULE: "@daily"
+      BACKUP_DIR: /db_dumps
+    volumes:
+      - /mnt/user/backups/immich_dbdumps:/db_dumps
+    depends_on:
+      - postgresdb
     networks:
       - secure
 
