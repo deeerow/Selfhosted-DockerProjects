@@ -18,6 +18,10 @@ services:
     volumes:
       - ${UPLOAD_LOCATION:?err}:/usr/src/app/upload
       - /etc/localtime:/etc/localtime:ro
+      - type: bind    # binding the redis password file
+        source: ../authelia/secrets/REDIS_PASSWORD
+        target: /secrets/REDIS_PASSWORD
+        read_only: true
     labels:
       <<: *labels
       traefik.enable: true      # applying traefik reverse proxy
@@ -26,6 +30,9 @@ services:
       - .env
     ports:
       - 2283:3001
+    environment:
+      <<: *environment
+      REDIS_PASSWORD_FILE: /secrets/REDIS_PASSWORD
     networks:
       - secure
       - proxy
@@ -40,8 +47,15 @@ services:
     volumes:
       - ${UPLOAD_LOCATION:?err}:/usr/src/app/upload
       - /etc/localtime:/etc/localtime:ro
+      - type: bind    # binding the redis password file
+        source: ../authelia/secrets/REDIS_PASSWORD
+        target: /secrets/REDIS_PASSWORD
+        read_only: true
     env_file:
       - .env
+    environment:
+      <<: *environment
+      REDIS_PASSWORD_FILE: /secrets/REDIS_PASSWORD
     networks:
       - secure
       - proxy
