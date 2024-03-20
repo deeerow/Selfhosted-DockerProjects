@@ -107,6 +107,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       SCHEDULE: "@daily"
       BACKUP_DIR: /db_dumps
+      BACKUP_KEEP_DAYS: 30
     volumes:
       - /mnt/user/backups/immich_dbdumps:/db_dumps
     depends_on:
