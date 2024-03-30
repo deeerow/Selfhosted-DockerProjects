@@ -72,7 +72,6 @@ api:
 log:
   level: INFO
   filePath: "/var/log/crowdsec/traefik.log"
-  bufferingSize: 50
 
 # giving access to crowdsec to analyze traefik logs
 accessLog:
