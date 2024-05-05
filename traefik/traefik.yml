@@ -41,7 +41,6 @@ providers:
     # Default host rule to containername.domain.example
     defaultRule: "Host(`{{ index .Labels \"com.docker.compose.service\"}}.nightowls.pro`)" # replace with your domain
     endpoint: "tcp://socket-proxy:2375"
-    swarmModeRefreshSeconds: 15s
     exposedByDefault: false
 
   # include dynamic traefik file rules that will be run in the directory; don't need to restart service for file edits
@@ -68,15 +67,15 @@ certificatesResolvers:
 api:
   dashboard: true
 
-# log level INFO|DEBUG|ERROR
+# log level default is ERROR - TRACE|DEBUG|INFO|ERROR|FATAL|PANIC
 log:
   level: INFO
   filePath: "/var/log/crowdsec/traefik.log"
 
-# giving access to crowdsec to analyze traefik logs
+# activating accessLogs to giving access to crowdsec to analyze traefik logs
 accessLog:
   filePath: "/var/log/crowdsec/accesstraefik.log"
-  bufferingSize: 50
+  bufferingSize: 50   # To write the logs in an asynchronous fashion, specify a bufferingSize option. 
 
 # installed plugins provided by traefik
 experimental:
