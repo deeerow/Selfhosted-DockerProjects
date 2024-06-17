@@ -14,7 +14,6 @@ services:
     <<: *default
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
-    command: ['start.sh', 'immich']
     volumes:
       - ${UPLOAD_LOCATION:?err}:/usr/src/app/upload
       - /etc/localtime:/etc/localtime:ro
@@ -25,34 +24,10 @@ services:
     labels:
       <<: *labels
       traefik.enable: true      # applying traefik reverse proxy
-      #traefik.http.routers.immich_server.middlewares: auth@file   # enabling authelia security login
     env_file:
       - .env
     ports:
       - 2283:3001
-    environment:
-      <<: *environment
-      REDIS_PASSWORD_FILE: /secrets/REDIS_PASSWORD
-    networks:
-      - secure
-      - proxy
-    depends_on:
-      - postgresdb
-
-  immich-microservices:
-    <<: *default
-    container_name: immich_microservices
-    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
-    command: ['start.sh', 'microservices']
-    volumes:
-      - ${UPLOAD_LOCATION:?err}:/usr/src/app/upload
-      - /etc/localtime:/etc/localtime:ro
-      - type: bind    # binding the redis password file
-        source: ../authelia/secrets/REDIS_PASSWORD
-        target: /secrets/REDIS_PASSWORD
-        read_only: true
-    env_file:
-      - .env
     environment:
       <<: *environment
       REDIS_PASSWORD_FILE: /secrets/REDIS_PASSWORD
