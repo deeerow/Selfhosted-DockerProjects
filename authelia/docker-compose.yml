@@ -1,5 +1,5 @@
 x-app: &default
-  restart: unless-stopped
+  restart: always
   environment: &environment
     TZ: America/Vancouver
   labels: &labels

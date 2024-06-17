@@ -1,5 +1,17 @@
+x-app: &default
+  restart: always
+  environment: &environment
+    TZ: America/Vancouver
+    PGID: ${PGID:?err}
+    PUID: ${PUID:?err}
+  labels: &labels
+    com.centurylinklabs.watchtower.enable: true
+  security_opt:
+    - no-new-privileges:true
+
 services:
     crowdsec:
+        <<: *default
         image: crowdsecurity/crowdsec:latest
         container_name: crowdsec
         expose:
@@ -14,23 +26,17 @@ services:
               target: /var/log/syslog
               read_only: true
         environment:
+            <<: *environment
             COLLECTIONS: "crowdsecurity/linux crowdsecurity/traefik crowdsecurity/http-cve LePresidente/authelia"
-            TZ: America/Vancouver
-            PGID: ${PGID:?err}
-            PUID: ${PUID:?err}
         networks:
             - proxy
-        security_opt:
-            - no-new-privileges:true
-        restart: unless-stopped
-    
+
     bouncer-traefik:
+        <<: *default
         image: fbonalair/traefik-crowdsec-bouncer
         container_name: bouncer-traefik
         environment:
-            TZ: America/Vancouver
-            PGID: ${PGID:?err}
-            PUID: ${PUID:?err}
+            <<: *environment
             CROWDSEC_BOUNCER_API_KEY: ${CROWDSEC_BOUNCER_API_KEY:?err}
             CROWDSEC_AGENT_HOST: crowdsec:8080
             GIN_MOD: release
@@ -38,9 +44,6 @@ services:
             - proxy
         depends_on:
             - crowdsec
-        security_opt:
-            - no-new-privileges:true        
-        restart: unless-stopped
 
 networks:
   proxy:
