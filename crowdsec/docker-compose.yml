@@ -4,8 +4,6 @@ x-app: &default
     TZ: America/Vancouver
     PGID: ${PGID:?err}
     PUID: ${PUID:?err}
-  labels: &labels
-    com.centurylinklabs.watchtower.enable: true
   security_opt:
     - no-new-privileges:true
 
