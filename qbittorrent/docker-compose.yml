@@ -17,7 +17,6 @@ services:
       traefik.enable: true
       traefik.http.routers.qbittorrent.middlewares: auth@file   # enabling authelia security login
       traefik.http.services.qbittorrent.loadbalancer.server.port: 8080   # load balancing the port with traefik dashboard
-      com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: America/Vancouver
       PGID: ${PGID:?err}
