@@ -24,24 +24,20 @@ server:
     authz: {}	## See the dedicated "Server Authz Endpoints" configuration guide.
 
 log:
-  level: info
-  file_path: "/var/log/crowdsec/authelia.log"
+  level: 'info'
+  file_path: '/var/log/crowdsec/authelia.log'
   keep_stdout: true
 
 totp:
   disable: false
-  issuer: authelia.com
-  algorithm: sha1
+  issuer: 'authelia.com'
+  algorithm: 'sha1'
   digits: 8
   period: 30
   skew: 1
   secret_size: 32
 
 authentication_backend:
-  refresh_interval: 5m
-  password_reset:
-    disable: false
-
   ldap:
     address: 'ldap://openldap'
     implementation: 'custom'
@@ -64,20 +60,20 @@ authentication_backend:
       group_name: 'cn'
 
 access_control:
-  default_policy: deny
+  default_policy: 'deny'
   rules:
     ## bypass rule
     - domain:
-        - "auth.nightowls.pro"
+        - 'auth.nightowls.pro'
       policy: bypass
     ## bypass api / triggers
-    - domain: "*.nightowls.pro"
+    - domain: '*.nightowls.pro'
       resources:
-        - "^/api([/?].*)?$"
+        - '^/api([/?].*)?$'
       policy: bypass
     ## two factor login for everyone
-    - domain: "*.nightowls.pro"
-      policy: two_factor
+    - domain: '*.nightowls.pro'
+      policy: 'two_factor'
 
 session:
   name: 'authelia_session'
