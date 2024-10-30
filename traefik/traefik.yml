@@ -8,8 +8,6 @@ entryPoints:
     address: :80
     http:
       middlewares:
-        - securityHeaders@file   # applying custom security headers on all endpoints
-        - my-plugin-log4shell@file   # applying log4j JNDI attacks plugin on all endpoints
       redirections:
         entryPoint:
           to: https
@@ -18,6 +16,8 @@ entryPoints:
   # HTTPS endpoint, with domain wildcard
   https:
     address: :443
+    http3:    # enable HTTP3 QUIC via UDP/443
+      advertisedPort: '443'
     http:
       tls:
         # Generate a wildcard domain certificate
@@ -28,8 +28,9 @@ entryPoints:
               - '*.nightowls.pro' # change to your domain
       middlewares:
         - securityHeaders@file   # applying custom security headers on all endpoints
-        - my-plugin-log4shell@file   # applying log4j JNDI attacks plugin on all endpoints
-        - crowdsec-bouncer@file   # applying crowdsec bouncers through all endpoints going through traefik
+        - log4shell@file   # applying log4j JNDI attacks plugin on all endpoints
+        - rate-limiter@file   # applying a rate limiter on the endpoints
+        - crowdsec@file   # applying crowdsec bouncers through all endpoints going through traefik using a plugin
 
 providers:
   providersThrottleDuration: 2s
@@ -75,7 +76,17 @@ log:
 # activating accessLogs to giving access to crowdsec to analyze traefik logs
 accessLog:
   filePath: "/var/log/crowdsec/accesstraefik.log"
-  bufferingSize: 50   # To write the logs in an asynchronous fashion, specify a bufferingSize option. 
+  filters:
+    statusCodes:
+      - "200-299"   # log successful http requests
+      - "400-599"   # log failed http requests
+  # collect logs as in-memory buffer before writing into log file
+  bufferingSize: 0  # To write the logs in an asynchronous fashion, specify a bufferingSize option. 
+  fields:
+    headers:
+      defaultMode: drop   # drop all headers per default
+      names:
+          User-Agent: keep   # log user agent strings
 
 # installed plugins provided by traefik
 experimental:
@@ -83,3 +94,6 @@ experimental:
     plugin-log4shell:
       moduleName: "github.com/traefik/plugin-log4shell"
       version: "v0.1.2"
+    bouncer:
+      moduleName: "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
+      version: "v1.3.5"

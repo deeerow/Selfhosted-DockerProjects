@@ -8,12 +8,12 @@ Should have a logrotate just in case if your logs get to full and unable to writ
 # please adjust the below traefik container name to send the USR1 signal for log rotation
 
 /var/log/crowdsec/*.log {
-  size 10M
-  rotate 5
+  size 20M
+  daily
+  rotate 14
   compress
   missingok
-  notifempty
-  postrotate
+  notifempty postrotate
   dateext
   dateformat .%Y-%m-%d
   create 0666 root root   # the reason why we want 666 is because authelia.log requires write access unfortunately otherwise 0644 is ideal

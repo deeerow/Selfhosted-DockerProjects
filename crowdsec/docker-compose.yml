@@ -1,19 +1,13 @@
-x-app: &default
-  restart: always
-  environment: &environment
-    TZ: America/Vancouver
-    PGID: ${PGID:?err}
-    PUID: ${PUID:?err}
-  security_opt:
-    - no-new-privileges:true
-
 services:
-    crowdsec:
-        <<: *default
+    crowdsec:   # crowdsec traefik-bouncer is referenced in traefiks service as a plugin 
         image: crowdsecurity/crowdsec:latest
         container_name: crowdsec
         expose:
-            - 8080
+            - 8080   # http api for bouncers
+            #- 6060   # metrics endpoint for prometheus
+            - 7422   # appsec waf endpoint
+        ports:
+            - 127.0.0.1:9876:8080   # port mapping for local firewall bouncers
         volumes:
             - ./acquis.yaml:/etc/crowdsec/acquis.yaml
             - ./crowdsec_config/data:/var/lib/crowdsec_config/data
@@ -24,24 +18,15 @@ services:
               target: /var/log/syslog
               read_only: true
         environment:
-            <<: *environment
-            COLLECTIONS: "crowdsecurity/linux crowdsecurity/traefik crowdsecurity/http-cve LePresidente/authelia"
+            COLLECTIONS: "crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/appsec-generic-rules crowdsecurity/appsec-virtual-patching crowdsecurity/sshd crowdsecurity/linux crowdsecurity/base-http-scenarios LePresidente/authelia"
+            TZ: America/Vancouver
+            PGID: ${PGID:?err}
+            PUID: ${PUID:?err}
+        security_opt:
+            - no-new-privileges:true
         networks:
             - proxy
-
-    bouncer-traefik:
-        <<: *default
-        image: fbonalair/traefik-crowdsec-bouncer
-        container_name: bouncer-traefik
-        environment:
-            <<: *environment
-            CROWDSEC_BOUNCER_API_KEY: ${CROWDSEC_BOUNCER_API_KEY:?err}
-            CROWDSEC_AGENT_HOST: crowdsec:8080
-            GIN_MOD: release
-        networks:
-            - proxy
-        depends_on:
-            - crowdsec
+        restart: always
 
 networks:
   proxy:
