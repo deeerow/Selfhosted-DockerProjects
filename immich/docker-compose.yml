@@ -77,12 +77,14 @@ services:
     environment:
       <<: *environment
       POSTGRES_HOST: postgresdb
+      POSTGRES_CLUSTER: 'TRUE'
       POSTGRES_DB: ${DB_DATABASE_NAME}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       SCHEDULE: "@daily"
       BACKUP_DIR: /db_dumps
       BACKUP_KEEP_DAYS: 14
+      POSTGRES_EXTRA_OPTS: '--clean --if-exists'
     volumes:
       - /mnt/user/backups/immich_dbdumps:/db_dumps
     depends_on:
