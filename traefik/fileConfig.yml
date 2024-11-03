@@ -51,15 +51,17 @@ http:
           crowdsecLapiScheme: http
           crowdsecLapiTLSInsecureVerify: false
           forwardedHeadersTrustedIPs:   # private class ranges
-            - 10.0.0.0/8
-            - 172.19.0.0/24
-            - 172.18.0.0/24
+            # put your docker network containter IPs
+            
+            # router IP
             - 192.168.0.0/16
+            #  add your own list of whitelists
           clientTrustedIPs:   # private class ranges
-            - 10.0.0.0/8
-            - 172.19.0.0/24
-            - 172.18.0.0/24
+            # put your docker network containter IPs
+            
+            # router IP
             - 192.168.0.0/16
+            #  add your own list of whitelists of IPs
 
     # Security headers
     securityHeaders:
