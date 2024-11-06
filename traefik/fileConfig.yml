@@ -23,15 +23,6 @@ http:
           - Remote-Name
           - Remote-Email
 
-    # http caching define
-    http-cache:
-      httpCache:
-        maxTtl: 300
-        excludedResponseCodes:
-          - "500-599"
-          - "400-499"
-          - "300-399"
-
     # rate limit define
     rate-limiter:
       rateLimit:
