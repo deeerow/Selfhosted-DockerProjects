@@ -29,7 +29,6 @@ entryPoints:
       middlewares:
         - securityHeaders@file   # applying custom security headers on all endpoints
         - log4shell@file   # applying log4j JNDI attacks plugin on all endpoints
-        - http-cache@file   # applying a http cache on all endpoints
         - rate-limiter@file   # applying a rate limiter on the endpoints
         - crowdsec@file   # applying crowdsec bouncers through all endpoints going through traefik using a plugin
 
