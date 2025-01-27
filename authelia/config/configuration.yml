@@ -80,7 +80,7 @@ session:
   same_site: 'lax'
   expiration: '1h'
   inactivity: '5m'
-  remember_me: '1M'
+  remember_me: '1d'
   cookies:
     - domain: 'nightowls.pro'
       authelia_url: 'https://auth.nightowls.pro'
@@ -88,7 +88,7 @@ session:
       same_site: 'lax'
       inactivity: '5m'
       expiration: '1h'
-      remember_me: '1d'
+      remember_me: '15d'
   redis:
     host: redis
     port: 6379

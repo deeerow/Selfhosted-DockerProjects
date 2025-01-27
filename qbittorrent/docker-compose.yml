@@ -1,15 +1,14 @@
 services:
   qbittorrent:
     container_name: qbittorrent
-    image: dyonr/qbittorrentvpn:latest
+    image: trigus42/qbittorrentvpn:latest
     cap_add:
     - NET_ADMIN
+    sysctls:
+    - net.ipv4.conf.all.src_valid_mark=1
     privileged: true
-    expose:
-      - 8080
     ports:
-      - 8999:8999
-      - 8999:8999/udp
+      - 80:8080
     volumes:
       - ./:/config
       - ${MEDIA_DIR:?err}/torrents:/data/torrents:rw
@@ -26,7 +25,7 @@ services:
       VPN_TYPE: openvpn
       VPN_USERNAME: ${VPN_USERNAME}
       VPN_PASSWORD: ${VPN_PASSWORD}
-      LAN_NETWORK: 192.168.0.0/24, 172.20.0.0/24
+      WEBUI_PASSWORD: ${MY_WEBUI_PASSWORD}
     networks:
       - proxy
     security_opt:
