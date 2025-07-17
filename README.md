@@ -10,10 +10,8 @@ Should have a logrotate just in case if your logs get to full and unable to writ
 /var/log/crowdsec/*.log {
   su root root
   size 20M
-  daily
   rotate 14
   compress
-  missingok
   notifempty
   postrotate
     dateext
