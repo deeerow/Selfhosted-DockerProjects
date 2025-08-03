@@ -38,6 +38,7 @@ services:
       TZ: America/Vancouver
       CONTAINERS: 1
       POST: 0
+      EVENTS: 1  # Grant access to the /events API for crowdsec v1.6.9
     privileged: true
     networks:
       - secure

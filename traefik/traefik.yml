@@ -62,7 +62,8 @@ certificatesResolvers:
         resolvers:
           - "1.1.1.1:53"
           - "8.8.8.8:53"
-        delayBeforeCheck: 10
+        propagation:
+          delayBeforeChecks: 5  # Recommended way to configure delay
 
 # Enabling traefik dashboard UI
 api:
@@ -96,4 +97,4 @@ experimental:
       version: "v0.1.2"
     bouncer:
       moduleName: "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
-      version: "v1.3.5"
+      version: "v1.4.4"
