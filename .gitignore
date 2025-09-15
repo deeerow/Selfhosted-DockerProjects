@@ -20,3 +20,4 @@ acme.json
 /arr_services/sonarr/
 /arr_services/notifiarr/
 /crowdsec/crowdsec_config/
+arr_services/dispatcharr/

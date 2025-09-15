@@ -1,5 +1,21 @@
+x-app: &default
+  restart: unless-stopped
+  networks:
+    -  proxy
+  environment:
+    TZ: America/Vancouver
+    PGID: ${PGID:?err}
+    PUID: ${PUID:?err}
+    UMASK: ${UMASK:?err}
+  labels: &labels
+    traefik.enable: true
+    com.centurylinklabs.watchtower.enable: true
+  security_opt:
+    - no-new-privileges:true
+
 services:
   jellyfin:
+    <<: *default
     image: jellyfin/jellyfin:latest
     container_name: jellyfin
     ports:
@@ -7,40 +23,16 @@ services:
     volumes:
       - ./jellyfin:/config:rw
       - ${MEDIA_DIR:?err}:/data/media:ro
-      - ${TRANSCODE_DIR:?err}:/tmp:rw
-    environment:
-      TZ: America/Vancouver
-      PGID: ${PGID:?err}
-      PUID: ${PUID:?err}
-      UMASK: ${UMASK:?err}
-    labels:
-      traefik.enable: true
-      com.centurylinklabs.watchtower.enable: true
-    networks:
-      - proxy
-    security_opt:
-      - no-new-privileges:true
-    restart: unless-stopped
+      - ${TRANSCODE_DIR:?err}:/tmp/jellyfin:rw
 
   jellyseerr:
-    container_name: jellyseerr
+    <<: *default
     image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
     ports:
       - 5055:5055
     volumes:
       - ./jellyseerr:/app/config
-    labels:
-      traefik.enable: true
-      com.centurylinklabs.watchtower.enable: true
-    environment:
-      TZ: America/Vancouver
-      PGID: ${PGID:?err}
-      PUID: ${PUID:?err}
-    networks:
-      - proxy
-    security_opt:
-      - no-new-privileges:true
-    restart: unless-stopped
 
 networks:
   proxy:

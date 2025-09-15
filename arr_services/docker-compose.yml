@@ -2,7 +2,7 @@ x-app: &default
   restart: unless-stopped
   networks:
     -  proxy
-  environment:
+  environment: &environment
     TZ: America/Vancouver
     PGID: ${PGID:?err}
     PUID: ${PUID:?err}
@@ -76,6 +76,27 @@ services:
     labels:
       <<: *labels
       traefik.http.routers.flaresolverr.middlewares: auth@file
+
+  dispatcharr:
+    <<: *default
+    image: ghcr.io/dispatcharr/dispatcharr:latest
+    container_name: dispatcharr
+    expose:
+      - 9191
+    volumes:
+      - ./dispatcharr:/data
+    labels:
+      <<: *labels
+      traefik.http.routers.dispatcharr.middlewares: auth@file
+    environment:
+      <<: *environment
+      DISPATCHARR_ENV: aio
+      REDIS_HOST: localhost
+      CELERY_BROKER_URL: redis://localhost:6379/0
+      DISPATCHARR_LOG_LEVEL: info
+
+volumes:
+  dispatcharr:
 
 networks:
   proxy:
