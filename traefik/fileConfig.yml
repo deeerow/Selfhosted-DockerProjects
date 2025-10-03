@@ -52,16 +52,17 @@ http:
           crowdsecLapiTLSInsecureVerify: false
           forwardedHeadersTrustedIPs:   # private class ranges
             # put your docker network containter IPs
-            
-            # router IP
-            - 192.168.0.0/16
-            #  add your own list of whitelists
-          clientTrustedIPs:   # private class ranges
-            # put your docker network containter IPs
-            
+
             # router IP
             - 192.168.0.0/16
             #  add your own list of whitelists of IPs
+
+          clientTrustedIPs:   # private class ranges
+            # docker container ip
+
+            # asus router
+            - 192.168.0.0/16
+            #  add your own list of whitelists
 
     # Security headers
     securityHeaders:
@@ -89,8 +90,11 @@ http:
 tls:
   options:
     default:
-      maxVersion: VersionTLS13
+      sniStrict: true
       minVersion: VersionTLS12
+      curvePreferences:
+        - secp521r1
+        - secp384r1
       cipherSuites:
         - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
         - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
@@ -98,3 +102,7 @@ tls:
         - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
         - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
+        - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256
+    mintls13:
+      minVersion: VersionTLS13
