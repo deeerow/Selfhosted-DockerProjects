@@ -31,6 +31,11 @@ entryPoints:
         - log4shell@file   # applying log4j JNDI attacks plugin on all endpoints
         - rate-limiter@file   # applying a rate limiter on the endpoints
         - crowdsec@file   # applying crowdsec bouncers through all endpoints going through traefik using a plugin
+    transport:
+      respondingTimeouts:
+        readTimeout: 600s
+        idleTimeout: 600s
+        writeTimeout: 600s
 
 providers:
   providersThrottleDuration: 2s
@@ -97,4 +102,4 @@ experimental:
       version: "v0.1.2"
     bouncer:
       moduleName: "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
-      version: "v1.4.4"
+      version: "v1.4.5"

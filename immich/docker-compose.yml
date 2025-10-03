@@ -24,6 +24,7 @@ services:
     labels:
       <<: *labels
       traefik.enable: true      # applying traefik reverse proxy
+      traefik.http.services.immich.loadbalancer.server.port: 2283
     env_file:
       - .env
     ports:
