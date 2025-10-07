@@ -12,11 +12,15 @@ Should have a logrotate just in case if your logs get to full and unable to writ
   size 20M
   rotate 14
   compress
+  delaycompress
+  missingok
   notifempty
+  maxage 30
+  # the reason why we want 666 is because authelia.log requires write access
+  create 0666 root root
+  dateext
+  dateformat .%Y-%m-%d
   postrotate
-    dateext
-    dateformat .%Y-%m-%d
-    create 0666 root root   # the reason why we want 666 is because authelia.log requires write access unfortunately otherwise 0644 is ideal
     docker kill --signal="USR1" traefik   # adjust this line to your traefik container name
   endscript
 }
