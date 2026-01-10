@@ -1,0 +1,28 @@
+services:
+  shoko:
+    image: shokoanime/server:latest
+    container_name: shoko
+    ports:
+      - 8111:8111
+    labels:
+      traefik.enable: true    # enabling traefik on this app
+      com.centurylinklabs.watchtower.enable: true      # turning on auto-update using watchtower
+      traefik.http.routers.shoko.middlewares: auth@file   # enabling authelia security login
+    volumes:
+      - ./shoko_config:/home/shoko/.shoko
+      - ${MEDIA_DIR:?err}:/data/media:rw
+    environment:
+      TZ: America/Vancouver
+      PGID: ${PGID:?err}
+      PUID: ${PUID:?err}
+      UMASK: ${UMASK:?err}
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - proxy
+    restart: always
+    shm_size: 256m
+
+networks:
+  proxy:
+    external: true

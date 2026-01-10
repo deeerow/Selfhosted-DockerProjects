@@ -22,3 +22,4 @@ acme.json
 /crowdsec/crowdsec_config/
 /arr_services/dispatcharr/
 /immich/postgres/
+/shoko_server/shoko_config/

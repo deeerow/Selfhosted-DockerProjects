@@ -84,7 +84,7 @@ services:
     expose:
       - 9191
     volumes:
-      - ./dispatcharr:/data
+      - ./dispatcharr:/data    # /data/db needs to be 700or750 permissions
     labels:
       <<: *labels
       traefik.http.routers.dispatcharr.middlewares: auth@file

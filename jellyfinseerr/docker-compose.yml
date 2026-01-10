@@ -22,6 +22,7 @@ services:
       - 8096:8096
     volumes:
       - ./jellyfin:/config:rw
+      - ./jellyfin/Shokofin:/config/Shokofin:rw    # this is the help ensure shokofin config folder in jellyfin is readwrite permissions
       - ${MEDIA_DIR:?err}:/data/media:ro
       - ${TRANSCODE_DIR:?err}:/tmp/jellyfin:rw
 
