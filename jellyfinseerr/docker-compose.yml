@@ -26,14 +26,14 @@ services:
       - ${MEDIA_DIR:?err}:/data/media:ro
       - ${TRANSCODE_DIR:?err}:/tmp/jellyfin:rw
 
-  jellyseerr:
+  seerr:
     <<: *default
-    image: fallenbagel/jellyseerr:latest
-    container_name: jellyseerr
+    image: seerr/seerr:latest
+    container_name: seerr
     ports:
       - 5055:5055
     volumes:
-      - ./jellyseerr:/app/config
+      - ./seerr:/app/config
 
 networks:
   proxy:

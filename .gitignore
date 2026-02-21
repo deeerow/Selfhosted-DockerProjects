@@ -12,7 +12,7 @@ acme.json
 # ignoring all local docker data directories
 /authelia/openldap/
 /jellyfinseerr/jellyfin/
-/jellyfinseerr/jellyseerr/
+/jellyfinseerr/seerr/
 /qbittorrent/qBittorrent/
 /qbittorrent/openvpn/
 /arr_services/prowlarr/
