@@ -6,9 +6,13 @@ services:
     - NET_ADMIN
     sysctls:
     - net.ipv4.conf.all.src_valid_mark=1
+    - net.ipv6.conf.all.disable_ipv6=0
     privileged: true
     ports:
       - 80:8080
+    dns:
+      - "9.9.9.9"
+      - "1.1.1.1"
     volumes:
       - ./:/config
       - ${MEDIA_DIR:?err}/torrents:/data/torrents:rw
@@ -21,7 +25,6 @@ services:
       PGID: ${PGID:?err}
       PUID: ${PUID:?err}
       UMASK: ${UMASK:?err}
-      VPN_ENABLED: yes
       VPN_TYPE: openvpn
       VPN_USERNAME: ${VPN_USERNAME}
       VPN_PASSWORD: ${VPN_PASSWORD}
