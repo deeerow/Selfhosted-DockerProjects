@@ -20,8 +20,6 @@ services:
     <<: *default
     container_name: radarr
     image: lscr.io/linuxserver/radarr:latest
-    expose:
-      - 7878
     volumes:
       - ./radarr:/config
       - ${MEDIA_DIR:?err}:/data
@@ -36,8 +34,6 @@ services:
     <<: *default
     container_name: sonarr
     image: lscr.io/linuxserver/sonarr:latest
-    expose:
-      - 8989
     volumes:
       - ./sonarr:/config
       - ${MEDIA_DIR:?err}:/data
@@ -52,8 +48,6 @@ services:
     <<: *default
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
-    expose:
-      - 9696
     volumes:
       - ./prowlarr:/config
     labels:
@@ -68,8 +62,6 @@ services:
     container_name: notifiarr
     hostname: notifiarr
     image: golift/notifiarr:latest
-    expose:
-      - 5454
     volumes:
       - ./notifiarr:/config
       - /var/run/utmp:/var/run/utmp
@@ -85,8 +77,6 @@ services:
     container_name: flaresolverr
     hostname: flaresolverr
     image: ghcr.io/flaresolverr/flaresolverr:latest
-    expose:
-      - 8191
     labels:
       <<: *labels
       traefik.http.routers.flaresolverr.middlewares: auth@file
@@ -98,8 +88,6 @@ services:
     <<: *default
     image: ghcr.io/dispatcharr/dispatcharr:latest
     container_name: dispatcharr
-    expose:
-      - 9191
     volumes:
       - ./dispatcharr:/data    # /data/db needs to be 700or750 permissions
     labels:
