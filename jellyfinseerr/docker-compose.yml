@@ -12,28 +12,37 @@ x-app: &default
     com.centurylinklabs.watchtower.enable: true
   security_opt:
     - no-new-privileges:true
+  cap_drop:
+  - ALL
 
 services:
   jellyfin:
     <<: *default
     image: jellyfin/jellyfin:latest
     container_name: jellyfin
-    ports:
-      - 8096:8096
     volumes:
       - ./jellyfin:/config:rw
       - ./jellyfin/Shokofin:/config/Shokofin:rw    # this is the help ensure shokofin config folder in jellyfin is readwrite permissions
       - ${MEDIA_DIR:?err}:/data/media:ro
       - ${TRANSCODE_DIR:?err}:/tmp/jellyfin:rw
+    labels:
+      <<: *labels
+      traefik.http.routers.jellyfin.rule: Host(`jellyfin.nightowls.pro`)
+      traefik.http.routers.jellyfin.entrypoints: https
+      traefik.http.routers.jellyfin.middlewares: no-cache@file
+      traefik.http.services.jellyfin.loadbalancer.server.port: 8096
 
   seerr:
     <<: *default
     image: seerr/seerr:latest
     container_name: seerr
-    ports:
-      - 5055:5055
     volumes:
       - ./seerr:/app/config
+    labels:
+      <<: *labels
+      traefik.http.routers.seerr.rule: Host(`seerr.nightowls.pro`)
+      traefik.http.routers.seerr.entrypoints: https
+      traefik.http.services.seerr.loadbalancer.server.port: 5055
 
 networks:
   proxy:

@@ -6,7 +6,6 @@ services:
       - 8111:8111
     labels:
       traefik.enable: true    # enabling traefik on this app
-      com.centurylinklabs.watchtower.enable: true      # turning on auto-update using watchtower
       traefik.http.routers.shoko.middlewares: auth@file   # enabling authelia security login
     volumes:
       - ./shoko_config:/home/shoko/.shoko

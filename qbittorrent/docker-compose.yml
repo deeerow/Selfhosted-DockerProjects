@@ -6,10 +6,6 @@ services:
     - NET_ADMIN
     sysctls:
     - net.ipv4.conf.all.src_valid_mark=1
-    - net.ipv6.conf.all.disable_ipv6=0
-    privileged: true
-    ports:
-      - 80:8080
     dns:
       - "9.9.9.9"
       - "1.1.1.1"
@@ -18,6 +14,8 @@ services:
       - ${MEDIA_DIR:?err}/torrents:/data/torrents:rw
     labels:
       traefik.enable: true
+      traefik.http.routers.qbittorrent.rule: Host(`qbittorrent.nightowls.pro`)
+      traefik.http.routers.qbittorrent.entrypoints: https
       traefik.http.routers.qbittorrent.middlewares: auth@file   # enabling authelia security login
       traefik.http.services.qbittorrent.loadbalancer.server.port: 8080   # load balancing the port with traefik dashboard
     environment:

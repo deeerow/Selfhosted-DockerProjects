@@ -24,11 +24,11 @@ services:
     labels:
       <<: *labels
       traefik.enable: true      # applying traefik reverse proxy
+      traefik.http.routers.immich.rule: Host(`immich.nightowls.pro`)
+      traefik.http.routers.immich.entrypoints: https
       traefik.http.services.immich.loadbalancer.server.port: 2283
     env_file:
       - .env
-    ports:
-      - 2283:2283
     environment:
       <<: *environment
       REDIS_PASSWORD_FILE: /secrets/REDIS_PASSWORD
@@ -36,7 +36,8 @@ services:
       - secure
       - proxy
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     healthcheck:
       disable: false
 
@@ -55,7 +56,6 @@ services:
       - .env
     networks:
       - secure
-      - proxy
     healthcheck:
       disable: false
 
@@ -97,7 +97,8 @@ services:
     volumes:
       - /mnt/user/backups/immich_dbdumps:/db_dumps
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     networks:
       - secure
 
