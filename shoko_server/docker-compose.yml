@@ -2,11 +2,12 @@ services:
   shoko:
     image: shokoanime/server:latest
     container_name: shoko
-    ports:
-      - 8111:8111
     labels:
       traefik.enable: true    # enabling traefik on this app
       traefik.http.routers.shoko.middlewares: auth@file   # enabling authelia security login
+      traefik.http.routers.shoko.rule: Host(`shoko.nightowls.pro`)
+      traefik.http.routers.shoko.entrypoints: https
+      traefik.http.services.shoko.loadbalancer.server.port: 8111
     volumes:
       - ./shoko_config:/home/shoko/.shoko
       - ${MEDIA_DIR:?err}:/data/media:rw
@@ -17,6 +18,8 @@ services:
       UMASK: ${UMASK:?err}
     security_opt:
       - no-new-privileges:true
+    cap_drop:
+      - ALL
     networks:
       - proxy
     restart: always
