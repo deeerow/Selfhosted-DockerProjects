@@ -12,8 +12,6 @@ x-app: &default
     com.centurylinklabs.watchtower.enable: true
   security_opt:
     - no-new-privileges:true
-  cap_drop:
-  - ALL
 
 services:
   radarr:

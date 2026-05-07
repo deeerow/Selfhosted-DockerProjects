@@ -2,18 +2,11 @@ x-app: &default
   restart: unless-stopped
   networks:
     -  proxy
-  environment:
-    TZ: America/Vancouver
-    PGID: ${PGID:?err}
-    PUID: ${PUID:?err}
-    UMASK: ${UMASK:?err}
   labels: &labels
     traefik.enable: true
     com.centurylinklabs.watchtower.enable: true
   security_opt:
     - no-new-privileges:true
-  cap_drop:
-  - ALL
 
 services:
   jellyfin:
@@ -31,6 +24,11 @@ services:
       traefik.http.routers.jellyfin.entrypoints: https
       traefik.http.routers.jellyfin.middlewares: no-cache@file
       traefik.http.services.jellyfin.loadbalancer.server.port: 8096
+    environment:
+      TZ: America/Vancouver
+      PGID: ${PGID:?err}
+      PUID: ${PUID:?err}
+      UMASK: ${UMASK:?err}
 
   seerr:
     <<: *default
@@ -43,6 +41,8 @@ services:
       traefik.http.routers.seerr.rule: Host(`seerr.nightowls.pro`)
       traefik.http.routers.seerr.entrypoints: https
       traefik.http.services.seerr.loadbalancer.server.port: 5055
+    environment:
+      TZ: America/Vancouver
 
 networks:
   proxy:
