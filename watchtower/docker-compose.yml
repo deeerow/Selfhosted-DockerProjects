@@ -1,43 +1,21 @@
 services:
   watchtower:
-    image: containrrr/watchtower
+    image: nickfedor/watchtower
     container_name: watchtower
     expose:
     - 8181
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     labels:
       com.centurylinklabs.watchtower.enable: true
     environment:
       TZ: America/Vancouver
       WATCHTOWER_LABEL_ENABLE: true
-      WATCHTOWER_SCHEDULE: 0 0 4 * * SUN
-      WATCHTOWER_CLEANUP: true
-      WATCHTOWER_ROLLING_RESTART: true
+      WATCHTOWER_SCHEDULE: "0 0 4 * * SUN"
+      WATCHTOWER_CLEANUP: "true"
       WATCHTOWER_LOG_LEVEL: info
       WATCHTOWER_NOTIFICATION_REPORT: "true"
       WATCHTOWER_NOTIFICATION_URL: discord://${DISCORD_WEBHOOK_CHANNEL}@${DISCORD_WEBHOOK_ID}
-      WATCHTOWER_NOTIFICATION_TEMPLATE: |
-        {{- if .Report -}}
-          {{- with .Report -}}
-            {{- if ( or .Updated .Failed ) -}}
-        {{len .Scanned}} Scanned, {{len .Updated}} Updated, {{len .Failed}} Failed
-              {{- range .Updated}}
-        - {{.Name}} ({{.ImageName}}): {{.CurrentImageID.ShortID}} updated to {{.LatestImageID.ShortID}}
-              {{- end -}}
-              {{- range .Fresh}}
-        - {{.Name}} ({{.ImageName}}): {{.State}}
-            {{- end -}}
-            {{- range .Skipped}}
-        - {{.Name}} ({{.ImageName}}): {{.State}}: {{.Error}}
-            {{- end -}}
-            {{- range .Failed}}
-        - {{.Name}} ({{.ImageName}}): {{.State}}: {{.Error}}
-            {{- end -}}
-          {{- end -}}
-        {{- else -}}
-          {{range .Entries -}}{{.Message}}{{"\n"}}{{- end -}}
-        {{- end -}}
     networks:
       - secure
     security_opt:

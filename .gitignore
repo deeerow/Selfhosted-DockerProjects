@@ -1,25 +1,31 @@
-# ignore all .env files
+# all .env files
 *.env
 
-# ignore letsencrpyt acme.json file
+# Traefik letsencrpyt cert storage
 acme.json
 
 # ignoring secrets directories
-/authelia/secrets
-/traefik/secrets
-/immich/secrets
+**/secrets/
 
-# ignoring all local docker data directories
+# Persistence data apps
 /authelia/openldap/
+/authelia/redis/
+/authelia/mariadb/
+
 /jellyfinseerr/jellyfin/
 /jellyfinseerr/seerr/
+
 /qbittorrent/qBittorrent/
 /qbittorrent/openvpn/
+
 /arr_services/prowlarr/
 /arr_services/radarr/
 /arr_services/sonarr/
 /arr_services/notifiarr/
-/crowdsec/crowdsec_config/
 /arr_services/dispatcharr/
+
+/crowdsec/crowdsec_config/
+
 /immich/postgres/
+
 /shoko_server/shoko_config/

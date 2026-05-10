@@ -20,8 +20,6 @@ services:
       - ${TRANSCODE_DIR:?err}:/tmp/jellyfin:rw
     labels:
       <<: *labels
-      traefik.http.routers.jellyfin.rule: Host(`jellyfin.nightowls.pro`)
-      traefik.http.routers.jellyfin.entrypoints: https
       traefik.http.routers.jellyfin.middlewares: no-cache@file
       traefik.http.services.jellyfin.loadbalancer.server.port: 8096
     environment:
@@ -38,8 +36,6 @@ services:
       - ./seerr:/app/config
     labels:
       <<: *labels
-      traefik.http.routers.seerr.rule: Host(`seerr.nightowls.pro`)
-      traefik.http.routers.seerr.entrypoints: https
       traefik.http.services.seerr.loadbalancer.server.port: 5055
     environment:
       TZ: America/Vancouver

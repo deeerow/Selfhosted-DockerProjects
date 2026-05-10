@@ -21,6 +21,7 @@ services:
     labels:
       <<: *labels
       traefik.enable: true
+      traefik.http.services.auth.loadbalancer.server.port: 9091
     environment:
       <<: *environment
       PUID: ${PUID:?err}
@@ -46,7 +47,7 @@ services:
     expose:
       - 6379
     volumes:
-      - ./redis:/redis/bitnami/
+      - ./redis:/bitnami/redis/data
       - ./secrets:/secrets
     environment:
       <<: *environment
@@ -61,7 +62,7 @@ services:
     expose:
       - 3306
     volumes:
-      - ./mariadb:/config
+      - ./mariadb:/var/lib/mysql
       - ./secrets:/secrets
     environment:
       <<: *environment
@@ -95,7 +96,7 @@ services:
       LDAP_RFC2307BIS_SCHEMA: 'true'
     networks:
       - secure
-  
+
   ldapadmin:
     <<: *default
     container_name: ldapadmin
@@ -107,7 +108,8 @@ services:
     labels:
       <<: *labels
       traefik.enable: true
-      traefik.http.routers.ldapadmin.middlewares: auth@file   # applies authelia security
+      traefik.http.routers.ldapadmin.middlewares: auth@file, no-cache@file   # applies authelia security
+      traefik.http.services.ldapadmin.loadbalancer.server.port: 80
     environment:
       <<: *environment
       PHPLDAPADMIN_LDAP_HOSTS: openldap

@@ -5,8 +5,6 @@ services:
     labels:
       traefik.enable: true    # enabling traefik on this app
       traefik.http.routers.shoko.middlewares: auth@file   # enabling authelia security login
-      traefik.http.routers.shoko.rule: Host(`shoko.nightowls.pro`)
-      traefik.http.routers.shoko.entrypoints: https
       traefik.http.services.shoko.loadbalancer.server.port: 8111
     volumes:
       - ./shoko_config:/home/shoko/.shoko
