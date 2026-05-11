@@ -108,7 +108,7 @@ services:
     labels:
       <<: *labels
       traefik.enable: true
-      traefik.http.routers.ldapadmin.middlewares: auth@file, no-cache@file   # applies authelia security
+      traefik.http.routers.ldapadmin.middlewares: auth@file   # applies authelia security
       traefik.http.services.ldapadmin.loadbalancer.server.port: 80
     environment:
       <<: *environment

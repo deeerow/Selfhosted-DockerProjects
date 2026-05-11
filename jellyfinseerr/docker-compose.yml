@@ -2,6 +2,11 @@ x-app: &default
   restart: unless-stopped
   networks:
     -  proxy
+  environment:
+    TZ: America/Vancouver
+    PGID: ${PGID:?err}
+    PUID: ${PUID:?err}
+    UMASK: ${UMASK:?err}
   labels: &labels
     traefik.enable: true
     com.centurylinklabs.watchtower.enable: true
@@ -20,13 +25,7 @@ services:
       - ${TRANSCODE_DIR:?err}:/tmp/jellyfin:rw
     labels:
       <<: *labels
-      traefik.http.routers.jellyfin.middlewares: no-cache@file
       traefik.http.services.jellyfin.loadbalancer.server.port: 8096
-    environment:
-      TZ: America/Vancouver
-      PGID: ${PGID:?err}
-      PUID: ${PUID:?err}
-      UMASK: ${UMASK:?err}
 
   seerr:
     <<: *default
@@ -37,8 +36,6 @@ services:
     labels:
       <<: *labels
       traefik.http.services.seerr.loadbalancer.server.port: 5055
-    environment:
-      TZ: America/Vancouver
 
 networks:
   proxy:
