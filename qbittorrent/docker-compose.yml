@@ -1,21 +1,20 @@
 services:
   qbittorrent:
     container_name: qbittorrent
-    image: trigus42/qbittorrentvpn:latest
+    image: trigus42/qbittorrentvpn:qbt5.1.4-20260422
     cap_add:
     - NET_ADMIN
     sysctls:
     - net.ipv4.conf.all.src_valid_mark=1
+    - net.ipv6.conf.all.disable_ipv6=0
     dns:
-      - "9.9.9.9"
-      - "1.1.1.1"
+      - 9.9.9.9
+      - 1.1.1.1
     volumes:
-      - ./:/config
+      - ./app_config:/config
       - ${MEDIA_DIR:?err}/torrents:/data/torrents:rw
     labels:
       traefik.enable: true
-      traefik.http.routers.qbittorrent.rule: Host(`qbittorrent.nightowls.pro`)
-      traefik.http.routers.qbittorrent.entrypoints: https
       traefik.http.routers.qbittorrent.middlewares: auth@file   # enabling authelia security login
       traefik.http.services.qbittorrent.loadbalancer.server.port: 8080   # load balancing the port with traefik dashboard
     environment:
@@ -27,6 +26,7 @@ services:
       VPN_USERNAME: ${VPN_USERNAME}
       VPN_PASSWORD: ${VPN_PASSWORD}
       WEBUI_PASSWORD: ${MY_WEBUI_PASSWORD}
+      WEBUI_PORT: 8080
     networks:
       - proxy
     security_opt:

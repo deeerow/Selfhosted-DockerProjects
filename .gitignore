@@ -15,7 +15,7 @@ acme.json
 /jellyfinseerr/jellyfin/
 /jellyfinseerr/seerr/
 
-/qbittorrent/qBittorrent/
+/qbittorrent/app_config/
 /qbittorrent/openvpn/
 
 /arr_services/prowlarr/
