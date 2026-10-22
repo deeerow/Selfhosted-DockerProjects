@@ -1,6 +1,6 @@
 services:
   shoko:
-    image: shokoanime/server:latest
+    image: shokoanime/server:daily
     container_name: shoko
     labels:
       traefik.enable: true    # enabling traefik on this app
@@ -14,6 +14,10 @@ services:
       PGID: ${PGID:?err}
       PUID: ${PUID:?err}
       UMASK: ${UMASK:?err}
+      INSTALL_PACKAGES: libva2 libva-drm2 intel-media-va-driver-non-free ffmpeg
+      EXTRA_GROUPS: 993        # stat -c '%g' /dev/dri/renderD128, on the hos
+    devices:
+      - /dev/dri:/dev/dri
     security_opt:
       - no-new-privileges:true
     networks:

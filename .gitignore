@@ -29,3 +29,4 @@ acme.json
 /immich/postgres/
 
 /shoko_server/shoko_config/
+/shoko_server/shoko_config-backup-before-daily/
